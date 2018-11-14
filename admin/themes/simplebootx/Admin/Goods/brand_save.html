@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <title>返现等级</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="__PUBLIC__/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="__PUBLIC__/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="__PUBLIC__/css/animate.css" rel="stylesheet">
+    <link href="__PUBLIC__/css/style.css?v=4.1.0" rel="stylesheet">
+    <link href="__PUBLIC__/css/plugins/iCheck/custom.css" rel="stylesheet">
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+
+    <div class="row">
+
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>品牌编辑</h5>
+                </div>
+                <div class="ibox-content">
+                    <form class="form-horizontal m-t" id="signupForm" method="post" action="{:U('admin/goods/brand_cate_save')}" enctype="multipart/form-data">
+
+                        <input type="hidden" name="id" value="{$data.id}">
+                        <div class="form-group">
+                            <h5 class="add-article-box-title" style="font-size: 17px;"><span>所属分类</span></h5>
+                            <div class="col-sm-2">
+                                <select name="pid" class="form-control select2 select2-hidden-accessible" style="width: 100%;height: 40px;" >
+                                    <option value="0" {$data['p_id']==0?'selected':''}>顶级(品牌分类)</option>
+                                    <volist name="tree" id="vo">
+                                        <option value="{$vo.id}" {$vo['id']==$data['p_id']?'selected':''} {$vo['p_id']!=0?'disabled':''}>{$vo.name}</option>
+                                    </volist>
+                                </select>
+
+
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <h5 class="add-article-box-title" style="font-size: 17px;"><span>品牌名称</span></h5>
+                            <input name="brand_name" class="form-control" type="text" value="{$data.name}">
+                        </div>
+
+                        <div class="form-group">
+                            <h5 class="add-article-box-title" style="font-size: 17px;"><span>添加图片</span></h5>
+                            <input type="file" name="brand_cate_img[]" value="" class="files" multiple >
+                            <div style="width:100%;height: 130px;border: 1px solid #d0d6d6;margin-top: 10px;" id="imgul">
+                                <span style="width:190px;height: 100px;border:1px dashed #e0e0e0;display: block;position: relative;margin: 10px 20px;">
+                                    <image src="./public{$data.img}" alt="" id="imgs" style="width: 100%;height: 100%;"></image>
+                                    <h5 class="noimg" style="background:#C6C6C6;color: #CF5B56;position: absolute;top:-18px;right: -6px;display: none;font-size:16px;border:2px solid #e1e3e9;border-radius: 8px;">X</h5>
+                                </span>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <div class="col-sm-8 col-sm-offset-3">
+                                <button class="btn btn-primary" type="button">提交</button>
+                                <button class="btn btn-danger" type="button" onclick="javascript:window.history.back(-1);">返回</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<!-- 全局js -->
+<script src="__PUBLIC__/js/jquery.min.js?v=2.1.4"></script>
+<script src="__PUBLIC__/js/bootstrap.min.js?v=3.3.6"></script>
+
+<!-- 自定义js -->
+<script src="__PUBLIC__/js/content.js?v=1.0.0"></script>
+
+<!-- jQuery Validation plugin javascript-->
+<script src="__PUBLIC__/js/plugins/validate/jquery.validate.min.js"></script>
+<script src="__PUBLIC__/js/plugins/validate/messages_zh.min.js"></script>
+
+<script src="__PUBLIC__/js/demo/form-validate-demo.js"></script>
+<script src="__PUBLIC__/js/layer/layer.js"></script>
+
+<!-- iCheck -->
+<script src="__PUBLIC__/js/plugins/iCheck/icheck.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.i-checks').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green',
+        });
+    });
+
+
+    // $("#imgs").mouseover(function () {
+    //     var image = $('.imgs').attr('src');
+    //     $(".noimg").css("display", "block");
+    // });
+    $(".noimg").click(function () {
+        $(this).css("display", "none");
+        $("#imgs").attr("src", "");
+        $(".files").val('');
+    })
+    $(".files").change(function () {
+        var objUrl = getObjectURL(this.files[0]);
+        console.log("objUrl = " + objUrl);
+        if (objUrl) {
+            $("#imgs").attr("src", objUrl);
+        }
+    });
+    //建立一個可存取到該file的url
+    function getObjectURL(file) {
+        var url = null;
+        if (window.createObjectURL != undefined) { // basic
+            url = window.createObjectURL(file);
+        }
+        else if (window.URL != undefined) {
+            // mozilla(firefox)
+            url = window.URL.createObjectURL(file);
+        }
+        else if (window.webkitURL != undefined) {
+            // webkit or chrome
+            url = window.webkitURL.createObjectURL(file);
+        }
+        return url;
+    }
+
+    $('.btn-primary').click(function(){
+        var formdata = new FormData();
+
+        formdata.append('id',$('[name="id"]').val());
+        formdata.append('pid',$('[name="pid"] option:selected').val());
+        formdata.append('brand_name',$('[name="brand_name"]').val());
+
+        var img = $('[name="brand_cate_img[]"]').get(0).files;
+         for(var i=0; i<img.length; i++){
+             formdata.append('img[]',img[i]);
+         }
+        $.ajax({
+            url: "{:U('admin/goods/brand_save')}",
+            type: 'POST',
+            cache: false,
+            data: formdata,
+            processData: false,
+            contentType: false,
+            success:function(e){
+                if(e.status==1){
+                    layer.msg(e.msg,{icon:1});
+                    window.location.href=e.url;
+                }else{
+                    layer.msg(e.msg,{icon:2});
+
+                }
+            }
+        });
+    });
+
+
+
+</script>
+
+
+
+</body>
+
+</html>

@@ -1,0 +1,62 @@
+<admintpl file="header" />
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>自营订单详情</h5>
+                </div>
+                <div class="ibox-content">
+                    <table class="table table-striped table-bordered table-hover ">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>订单ID</th>
+                            <th>货品名字</th>
+                            <th>货品属性</th>
+                            <th>购买数量</th>
+                            <th>单价金</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <foreach name="data" item="vo">
+                            <tr class="gradeX">
+                                <td>{$vo.id}</td>
+                                <td>{$vo.oid}</td>
+                                <td>{$vo.product_name}</td>
+                                <td></td>
+                                <td>{$vo.product_num}</td>
+                                <td>{$vo.product_price}</td>
+                            </tr>
+                        </foreach>
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 全局js -->
+<script src="__PUBLIC__/js/jquery.min.js?v=2.1.4"></script>
+<script src="__PUBLIC__/js/bootstrap.min.js?v=3.3.6"></script>
+
+
+
+<script src="__PUBLIC__/js/plugins/jeditable/jquery.jeditable.js"></script>
+
+<!-- Data Tables -->
+<script src="__PUBLIC__/js/plugins/dataTables/jquery.dataTables.js"></script>
+<script src="__PUBLIC__/js/plugins/dataTables/dataTables.bootstrap.js"></script>
+
+<!-- 自定义js -->
+<script src="__PUBLIC__/js/content.js?v=1.0.0"></script>
+<script src="__PUBLIC__/js/plugins/layer/layer.min.js"></script>
+
+<!-- 自定义js -->
+<script src="__PUBLIC__/js/content.js?v=1.0.0"></script>
+<script src="__PUBLIC__/js/demo/layer-demo.js"></script>
+<!-- Page-Level Scripts -->
+
+</body>

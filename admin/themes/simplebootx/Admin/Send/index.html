@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <title>消息群发</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+
+    <link rel="shortcut icon" href="favicon.ico"> <link href="__PUBLIC__/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="__PUBLIC__/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+
+    <!-- Data Tables -->
+    <link href="__PUBLIC__/css/plugins/dataTables/dataTables.bootstrap.css" rel="stylesheet">
+    <link href="__PUBLIC__/css/animate.css" rel="stylesheet">
+    <link href="__PUBLIC__/css/style.css?v=4.1.0" rel="stylesheet">
+
+</head>
+
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+         <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>消息群发列表</h5>
+                        <div class="ibox-tools">
+                            
+                           
+                        </div>
+                    </div>
+                    
+                    <div class="ibox-content">
+						<div>
+                        <form role="form" class="form-inline" method="post" action="{:U('admin/send/sendall')}" onsubmit="return checkForm()">
+                            <div class="checkbox m-l m-r-xs">
+                                <label class="i-checks">
+                                    <input type="checkbox" name="checkall" value="1" id="checkall"><i></i>全选</label>
+                            </div>
+                            <button class="btn btn-white" type="submit">发送</button>
+                        </form>
+                    </div>
+                        <table class="table table-striped table-bordered table-hover dataTables-example">
+                            <thead>
+                                <tr>
+                                    <th>序号</th>
+                                    <th>昵称</th>
+                                    <th>头像</th>
+                                    <th>是否在黑名单</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            	<foreach name="data" item="vo">
+	                                <tr class="gradeX">
+	                                    <td>{$vo.id}</td>
+	                                    <td>{$vo.nickname}</td>
+	                                    <td><img src="{$vo.avatar}" style="width:50px;height:50px;"></td>
+	                                    <td>
+                                    	<php>
+                                    		if(in_array($vo['id'],$blackArray)){
+                                    	</php>
+                                    		<span class="label label-danger">是</span>
+                                    	<php>
+                                    		}else{
+                                    	</php>
+                                    		<span class="label label-success">否</span>
+                                    	<php>
+                                    		}
+                                    	</php>
+                                    </td>
+	                                   	<td>
+	                                   		<a class="btn btn-white btn-bitbucket" href="{:U('admin/send/add',array('id'=>$vo['id']))}">
+					                            <i class="fa fa-paper-plane-o"></i>
+					                        </a>
+	                                   	</td>
+	                                </tr>
+                                </foreach>
+                               
+                            </tbody>
+                          
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 全局js -->
+    <script src="__PUBLIC__/js/jquery.min.js?v=2.1.4"></script>
+    <script src="__PUBLIC__/js/bootstrap.min.js?v=3.3.6"></script>
+
+
+
+    <script src="__PUBLIC__/js/plugins/jeditable/jquery.jeditable.js"></script>
+
+    <!-- Data Tables -->
+    <script src="__PUBLIC__/js/plugins/dataTables/jquery.dataTables.js"></script>
+    <script src="__PUBLIC__/js/plugins/dataTables/dataTables.bootstrap.js"></script>
+
+    <!-- 自定义js -->
+    <script src="__PUBLIC__/js/content.js?v=1.0.0"></script>
+	<script src="__PUBLIC__/js/plugins/layer/layer.min.js"></script>
+
+    <!-- 自定义js -->
+    <script src="__PUBLIC__/js/content.js?v=1.0.0"></script>
+    <script src="__PUBLIC__/js/demo/layer-demo.js"></script>
+    <!-- Page-Level Scripts -->
+    <script>
+    $(document).ready(function () {
+        $('.dataTables-example').dataTable();
+
+        /* Init DataTables */
+        var oTable = $('#editable').dataTable();
+
+        /* Apply the jEditable handlers to the table */
+        oTable.$('td').editable('../example_ajax.php', {
+            "callback": function (sValue, y) {
+                var aPos = oTable.fnGetPosition(this);
+                oTable.fnUpdate(sValue, aPos[0], aPos[1]);
+            },
+            "submitdata": function (value, settings) {
+                return {
+                    "row_id": this.parentNode.getAttribute('id'),
+                    "column": oTable.fnGetPosition(this)[2]
+                };
+            },
+
+            "width": "90%",
+            "height": "100%"
+        });
+
+
+    });
+       function send(id){
+    	   parent.layer.open({
+    		    type: 2,
+    		    title: '发送消息',
+    		    shadeClose: true,
+    		    shade: 0.8,
+    		    area: ['480px', '63%'],
+    		    content: '/index.php?g=admin&m=send&a=add&id='+id //iframe的url
+    		});
+       }
+       
+       function checkForm(){
+    	   if($('#checkall').is(':checked')) {
+    		   return true;
+           }else{
+        	   parent.layer.msg('未选中', {icon: 2});
+           }
+    	   return false;
+       }
+    </script>
+
+    
+    
+
+</body>
+
+</html>

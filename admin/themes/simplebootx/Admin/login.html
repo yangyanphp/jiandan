@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+    <title>减单后台管理系统 - 登录</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+	<admintpl file="header" />
+</head>
+<body class="signin">
+    <div class="signinpanel">
+        <div class="row">
+            <div class="col-sm-12">
+                <form method="post">
+                    <h4 class="no-margins">登录：</h4>
+                    <p class="m-t-md">减单后台管理系统</p>
+                    <input type="text" class="form-control uname" name="username" placeholder="用户名" />
+                    <input type="password" class="form-control pword m-b" name="password" placeholder="密码" />
+                    <button class="btn btn-success btn-block" type="button" onclick="subForm()">登录</button>
+                </form>
+            </div>
+        </div>
+        <div class="signup-footer">
+            <div class="pull-left">
+               
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+	function subForm(){
+		
+		var username = $("input[name='username']").val();
+    	var password = $("input[name='password']").val();
+    	if($.trim(username)==""){
+    		parent.layer.alert('用户名不能为空');
+    		//return false;
+    	}else if($.trim(password)==""){
+    		parent.layer.alert('密码不能为空');
+    		//return false;
+    	}else{
+    		
+    		$.post("{:U('public/dologin')}",{username:username,password:password},
+   				function(data){
+    				
+   				 	if(data==2){
+   				 		//parent.layer.alert('登录成功');
+   				 		window.location.href="{:U('Index/index')}";
+   				 	}else{
+   				 		parent.layer.alert('帐号或密码错误');
+   				 	}
+   				},
+    		"text");//这里返回的类型有：json,html,xml,text
+    		
+    		
+    		
+    	}
+		
+	}
+	
+</script>
+</html>

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <title>发送消息</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+
+    <link rel="shortcut icon" href="favicon.ico"> 
+    <link href="__PUBLIC__/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="__PUBLIC__/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="__PUBLIC__/css/animate.css" rel="stylesheet">
+    <link href="__PUBLIC__/css/style.css?v=4.1.0" rel="stylesheet">
+ 	<link href="__PUBLIC__/css/plugins/iCheck/custom.css" rel="stylesheet">
+ 	<link href="__PUBLIC__/select/jquery.searchableSelect.css" rel="stylesheet" type="text/css">
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/select/tip.css" />
+	
+</head>
+
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        
+        <div class="row">
+            
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>推送设置</h5>
+                        
+                    </div>
+                    <div class="ibox-content">
+                        <form class="form-horizontal m-t" id="signupForm" method="post" action="{:U('admin/send/edit_post')}">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">标题：</label>
+                                <div class="input-group m-b col-sm-2">
+                                     <input type="text" class="form-control" value="{$day}" name="day">
+                                </div>
+                               
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">图片：</label>
+                                <div class="input-group m-b col-sm-2">
+                                     <div id="preview">
+										<img id="imghead" border="0" src="__PUBLIC__/img/photo_icon.png" width="90" height="90" onClick="$('#previewImg').click();">
+									 </div>         
+									<input type="file" onChange="previewImage(this)" style="display: none;" id="previewImg">
+                                </div>
+                                
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">发送用户类型：</label>
+                                <div class="col-sm-2">
+		                            <div class="radio i-checks">
+		                                <label>
+		                                    <input type="radio"  <php>if($type==1){</php> checked="" <php>}</php> value="1" name="type"> <i></i>全部用户
+		                                </label>
+		                                <label>
+		                                    <input type="radio" <php>if($type==2){</php> checked="" <php>}</php>  value="2" name="type"> <i></i>指定用户
+		                                </label>
+		                            </div>
+		                            
+                           		 </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label" style="margin-top:10px;">发送对象：</label>
+                                <div class="input-group m-b col-sm-5" style="height:200px;z-index:99;">
+                                		<php>
+                                			$res=M("Member")->select();
+                                		</php>
+                                        <select id="block_list">
+											<foreach name="res" item="arr">
+												<option value="{$arr.id}">{$arr.nickname}</option>
+											</foreach>
+										</select>
+										<div class="tip-container"><span class="jia"></span>加入黑名单</div>
+                        				<div class="site">
+											<div class="title">名单列表：</div>
+											<div class="tip">
+												<php>
+													$data = explode(',',$black);
+													if(!empty($data)){
+												</php>
+												<foreach name="data" item="vo" key="k">
+													<php>
+														$info=M("Member")->where("id=".$vo)->find();
+													</php>
+													<div class="tip-input">
+														<input type="hidden" class="house-tip" placeholder="" name="black_name[]" value="{$vo}">
+														<span>{$info.nickname}</span>
+														<span class="del"></span>
+													</div>
+												</foreach>
+												<php>
+													}
+												</php>
+											</div>
+										</div>
+                        				
+                                </div>
+                                
+                            </div>
+                           
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">备注：</label>
+                                <div class="input-group m-b col-sm-2">
+                                    <textarea id="ccomment" name="remark" class="form-control" required="" aria-required="true">{$remark}</textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-8 col-sm-offset-3">
+                                	<input type="hidden" name="id" value="{$id}">
+                                    <button class="btn btn-primary" type="submit">提交</button>
+                                </div>
+                            </div>
+                            
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- 全局js -->
+    <script src="__PUBLIC__/js/jquery.min.js?v=2.1.4"></script>
+    <script src="__PUBLIC__/js/bootstrap.min.js?v=3.3.6"></script>
+
+    <!-- 自定义js -->
+    <script src="__PUBLIC__/js/content.js?v=1.0.0"></script>
+
+    <!-- jQuery Validation plugin javascript-->
+    <script src="__PUBLIC__/js/plugins/validate/jquery.validate.min.js"></script>
+    <script src="__PUBLIC__/js/plugins/validate/messages_zh.min.js"></script>
+
+    <script src="__PUBLIC__/js/demo/form-validate-demo.js"></script>
+	<!-- iCheck -->
+    <script src="__PUBLIC__/js/plugins/iCheck/icheck.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/select/jquery.searchableSelect.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/select/tip.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+        });
+        
+        $('#block_list').searchableSelect();
+        
+      //图片上传预览    IE是用了滤镜。
+        function previewImage(file)
+        {
+          var MAXWIDTH  = 90; 
+          var MAXHEIGHT = 90;
+          var div = document.getElementById('preview');
+          if (file.files && file.files[0])
+          {
+              div.innerHTML ='<img id=imghead onclick=$("#previewImg").click()>';
+              var img = document.getElementById('imghead');
+              img.onload = function(){
+                var rect = clacImgZoomParam(MAXWIDTH, MAXHEIGHT, img.offsetWidth, img.offsetHeight);
+                img.width  =  rect.width;
+                img.height =  rect.height;
+//                 img.style.marginLeft = rect.left+'px';
+                img.style.marginTop = rect.top+'px';
+              }
+              var reader = new FileReader();
+              reader.onload = function(evt){img.src = evt.target.result;}
+              reader.readAsDataURL(file.files[0]);
+          }
+          else //兼容IE
+          {
+            var sFilter='filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale,src="';
+            file.select();
+            var src = document.selection.createRange().text;
+            div.innerHTML = '<img id=imghead>';
+            var img = document.getElementById('imghead');
+            img.filters.item('DXImageTransform.Microsoft.AlphaImageLoader').src = src;
+            var rect = clacImgZoomParam(MAXWIDTH, MAXHEIGHT, img.offsetWidth, img.offsetHeight);
+            status =('rect:'+rect.top+','+rect.left+','+rect.width+','+rect.height);
+            div.innerHTML = "<div id=divhead style='width:"+rect.width+"px;height:"+rect.height+"px;margin-top:"+rect.top+"px;"+sFilter+src+"\"'></div>";
+          }
+        }
+        function clacImgZoomParam( maxWidth, maxHeight, width, height ){
+            var param = {top:0, left:0, width:width, height:height};
+            if( width>maxWidth || height>maxHeight ){
+                rateWidth = width / maxWidth;
+                rateHeight = height / maxHeight;
+                
+                if( rateWidth > rateHeight ){
+                    param.width =  maxWidth;
+                    param.height = Math.round(height / rateWidth);
+                }else{
+                    param.width = Math.round(width / rateHeight);
+                    param.height = maxHeight;
+                }
+            }
+            param.left = Math.round((maxWidth - param.width) / 2);
+            param.top = Math.round((maxHeight - param.height) / 2);
+            return param;
+        }
+        
+    </script>
+
+</body>
+
+</html>

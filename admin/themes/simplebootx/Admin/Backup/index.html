@@ -1,0 +1,294 @@
+<admintpl file="header" />
+</head>
+<div class="page-content">
+    <div class="row">
+        <div class="col-xs-12">
+            <!-- 返回信息 -->
+            <div class="error-message" style="display:none;"></div>
+            <form id="backupForm" action="{:U('Admin/Backup/index_post',array('type'=>$btype,'backup_name'=>$bname,'sizelimit'=>$bsizelimit,'dosubmit'=>$bdosubmit))}" method="post">
+                <div>
+                    <a href="{:U('Admin/Backup/restore')}" class="btn btn-defalut">查看备份</a>
+                    <!-- <input type="submit" value="开始备份" class="btn btn-info" id="submitbtn"> -->
+                    <input type="button" value="开始备份" class="btn btn-info" id="submitbtn">
+                </div>
+                <div class="widget-box">
+                    <div class="widget-header widget-header-flat">
+                        <h4 class="smaller">
+                            <i class="ace-icon glyphicon glyphicon-list"></i>
+                            {$meta_title}
+                        </h4>
+                    </div>
+                    <div class="widget-body">
+                        <div class="widget-main">
+                            <!-- 自定内容 -->
+                            <div class="table_list">
+                            <table class="table" cellspacing="0" class="table_form">
+                                <tr>
+                                    <td class="col-xs-2">备份分卷大小</td>
+                                    <td>
+                                        <input type="text" name="sizelimit" value="{$sizelimit}" size="10"> K
+                                        &nbsp;&nbsp;(推荐10M以下)
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>备份名称</td>
+                                    <td><input type="text" name="backup_name" value="{$backup_name}"></td>
+                                </tr>
+                                <tr>
+                                    <td>备份类型</td>
+                                    <td>
+                                        <label>
+                                            <input type="radio" checked="checked" value="full" name="backup_type" onclick="javascript:$('#js-showtables').hide();" class="ace">
+                                            <span class="lbl"> 备份所有&nbsp;&nbsp;</span>
+                                        </label>
+                                        <label>
+                                            <input type="radio" value="custom" name="backup_type" onclick="javascript:$('#js-showtables').show();" class="ace" />
+                                            <span class="lbl">自定义备份</span>
+                                        </label>
+                                    </td>
+                                </tr>
+                                <tr id="js-showtables">
+                                    <td align="right">
+                                        <label class="position-relative">
+                                            <input type="checkbox" class="ace" checked="checked" id="selectAll" onclick="checkAll()">
+                                            <span class="lbl">&nbsp;&nbsp;全选/反选</span>
+                                        </label>
+                                    </td>
+                                    <td colspan="2">
+                                        <volist name="tables" id="val">
+                                            <label class="position-relative inline" style="width:300px;">
+                                                <input name="backup_tables[{$val}]" type="checkbox" value="-1" checked="checked" class="ace js-checkitem" />
+                                                <span class="lbl">&nbsp;&nbsp;{$val}</span>
+                                            </label>
+                                        </volist>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>&nbsp;</td>
+                                    <td>&nbsp;</td>
+                                </tr>
+                            </table>
+                            </div>
+                            <!-- end -->
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <!-- end -->
+        </div>
+    </div>
+    <!-- /.row -->
+</div>
+<style type="text/css">
+    #js-showtables{display:none;}
+    .checkbox.inline{
+        margin-left: 10px;
+    }
+</style>
+
+<script type="text/javascript" src="__PUBLIC__/Common/js/jquery.form.js"></script>
+<script type="text/javascript" src="__PUBLIC__/Admin/teajs/jquery_asyncoper.js"></script>
+<script type="text/javascript">
+// 全选反选
+function checkAll() 
+{ 
+    var checkedOfAll=$("#selectAll").prop("checked");
+    $("input[type='checkbox']").prop("checked", checkedOfAll); 
+} 
+$(function(){
+    $("#submitbtn").click(function(){
+        $('.error-message').css('display','block');
+        $('.error-message').html('<div class="alert alert-block alert-success"><button type="button" class="close" data-dismiss="alert"><i class="ace-icon fa fa-times"></i></button><i class="ace-icon fa fa-spinner fa-spin orange bigger-125"></i>&nbsp;&nbsp;正在备份，请勿进行其他操作！</div>');
+        var data=$('#backupForm').serialize();
+        var url="{:U('Admin/Backup/index_post')}";
+        postajaxForm(url,data);
+    });
+});
+function postajaxForm(url,serial){
+        cache: false,  
+        $.ajax({  
+          type: "POST",  
+          url: url,  
+          data: serial,
+          dataType: 'json',
+          success:function(data){  
+            //判断时候为json数据
+            if(data.status)
+            {
+                // 延时执行
+                $('.error-message').css('display','block');
+                $(".error-message").html('<div class="alert alert-block alert-success"><button type="button" class="close" data-dismiss="alert"><i class="ace-icon fa fa-times"></i></button><p><i class="ace-icon fa fa-check"></i>提示！'+data.info+'</p></div>');
+                $('.error-message').click(function(){
+                    $('.error-message').css('display','none');
+                });
+                setTimeout(function(){
+                    if(data.hasOwnProperty("url")){
+                        if(data.url!=''){
+                            window.location=data.url;
+                        }
+                    }else{
+                        $('.error-message').css('display','none');
+                    }
+                },1000);
+
+            } else {
+                $('.error-message').css('display','block');
+                $(".error-message").html('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert"><i class="ace-icon fa fa-times"></i></button><i class="ace-icon fa fa-times"></i>提示！'+data.info+'<br></div>');
+                $('.error-message').click(function(){
+                    $('.error-message').css('display','none');
+                });
+                setTimeout(function(){
+                    $('.error-message').css('display','none');
+                    if(data.hasOwnProperty("url")){
+                        if(data.url!=''){
+                            window.location=data.url;
+                        }
+                    }
+                },1000);
+            }
+          }  
+    });
+}
+
+//删除单行
+/**
+ * url:"{:U('Slide/delete_slide_category', array('id'=>$vo['id']))}"
+ * os:$(this)
+ */
+function del(url,os){
+    var tr =os.parent().parent();
+    if (confirm("确定删除？")) {
+        var id = os.attr("value");
+        $.ajax({
+            url: url,
+            data: "id=" + id,
+            type: "POST",
+            success: function (data) {
+                if (data.status=='1') {
+                    data=data.info;
+                    showTis(data,1,'success');
+                    tr.fadeOut("slow");
+                }else{
+                    data=data.info;
+                    showTis(data,1,'error');
+                }
+
+            }
+        });
+    }
+    return false;
+}
+function showTis(data,time,stut){
+
+    $('.error-message').css('display','block');
+    if(stut=='error'){
+        $(".error-message").html('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert"><i class="ace-icon fa fa-times"></i></button><i class="ace-icon fa fa-times"></i>提示！'+data+'<br></div>');
+    }else{
+        $(".error-message").html('<div class="alert alert-block alert-success"><button type="button" class="close" data-dismiss="alert"><i class="ace-icon fa fa-times"></i></button><p><i class="ace-icon fa fa-check"></i>提示！'+data+'</p></div>');
+    }
+    $('.error-message').click(function(){
+        $('.error-message').css('display','none');
+    });
+    setTimeout(function(){
+        $('.error-message').css('display','none');
+        //window.location.reload();
+    },(1000*time));
+}
+
+
+//异步提交数据 jquery_asyncoper.js
+/**
+ * url:"{:U('Slide/edit_category_handle')}"
+ * serial:$('#edit_slide_category').serialize()
+ */
+function postajaxForm(url,serial){
+        cache: false,  
+        $.ajax({  
+          type: "POST",  
+          url: url,  
+          data: serial,
+          dataType: 'json',
+          success:function(data){  
+            //判断时候为json数据
+            if(data.status)
+            {
+                // 延时执行
+                $('.error-message').css('display','block');
+                $(".error-message").html('<div class="alert alert-block alert-success"><button type="button" class="close" data-dismiss="alert"><i class="ace-icon fa fa-times"></i></button><p><i class="ace-icon fa fa-check"></i>提示！'+data.info+'</p></div>');
+                $('.error-message').click(function(){
+                    $('.error-message').css('display','none');
+                });
+                setTimeout(function(){
+                    if(data.hasOwnProperty("url")){
+                        if(data.url!=''){
+                            window.location=data.url;
+                        }
+                    }else{
+                        $('.error-message').css('display','none');
+                    }
+                },1000);
+
+            } else {
+                $('.error-message').css('display','block');
+                $(".error-message").html('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert"><i class="ace-icon fa fa-times"></i></button><i class="ace-icon fa fa-times"></i>提示！'+data.info+'<br></div>');
+                $('.error-message').click(function(){
+                    $('.error-message').css('display','none');
+                });
+                setTimeout(function(){
+                    $('.error-message').css('display','none');
+                    if(data.hasOwnProperty("url")){
+                        if(data.url!=''){
+                            window.location=data.url;
+                        }
+                    }
+                },1000);
+            }
+          }  
+    });
+}
+
+//删除单行
+/**
+ * url:"{:U('Slide/delete_slide_category', array('id'=>$vo['id']))}"
+ * os:$(this)
+ */
+function del(url,os){
+    var tr =os.parent().parent();
+    if (confirm("确定删除？")) {
+        var id = os.attr("value");
+        $.ajax({
+            url: url,
+            data: "id=" + id,
+            type: "POST",
+            success: function (data) {
+                if (data.status=='1') {
+                    data=data.info;
+                    showTis(data,1,'success');
+                    tr.fadeOut("slow");
+                }else{
+                    data=data.info;
+                    showTis(data,1,'error');
+                }
+
+            }
+        });
+    }
+    return false;
+}
+function showTis(data,time,stut){
+
+    $('.error-message').css('display','block');
+    if(stut=='error'){
+        $(".error-message").html('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert"><i class="ace-icon fa fa-times"></i></button><i class="ace-icon fa fa-times"></i>提示！'+data+'<br></div>');
+    }else{
+        $(".error-message").html('<div class="alert alert-block alert-success"><button type="button" class="close" data-dismiss="alert"><i class="ace-icon fa fa-times"></i></button><p><i class="ace-icon fa fa-check"></i>提示！'+data+'</p></div>');
+    }
+    $('.error-message').click(function(){
+        $('.error-message').css('display','none');
+    });
+    setTimeout(function(){
+        $('.error-message').css('display','none');
+        //window.location.reload();
+    },(1000*time));
+}
+</script>

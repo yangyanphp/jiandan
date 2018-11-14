@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv=”Content-Type” content=”text/html; charset=utf-8″>
+
+    <title>返现等级</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="__PUBLIC__/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="__PUBLIC__/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="__PUBLIC__/css/animate.css" rel="stylesheet">
+    <link href="__PUBLIC__/css/style.css?v=4.1.0" rel="stylesheet">
+    <link href="__PUBLIC__/css/plugins/iCheck/custom.css" rel="stylesheet">
+    <style>
+        .btn_new {
+            display: inline-block;
+            padding: 6px 12px;
+            margin-bottom: 0;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 1.42857143;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: middle;
+            -ms-touch-action: manipulation;
+            touch-action: manipulation;
+            cursor: pointer;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            background-image: none;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            margin:8px 420px;
+        }
+    </style>
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+
+    <div class="row">
+
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>商品规格设置</h5>
+                </div>
+
+                <div class="ibox-content">
+                    <form class="form-horizontal m-t" enctype="multipart/form-data" id="myForm" method="post" action="" >
+                        <input type="hidden" name="goods_id" value="{$_GET['id']}">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">商品名称：</label>
+                            <div class="col-sm-2">
+                                <input id="level_name" name="goods_name" value="{$goods.goods_name}" class="form-control" type="text" disabled>
+                            </div>
+                        </div>
+
+                        <!--<div class="form-group">-->
+                            <!--<label class="col-sm-3 control-label">商品品牌</label>-->
+                            <!--<div class="col-sm-2">-->
+                                <!--<select name="brand_id" >-->
+                                    <!--<option value="0">请选择品牌</option>-->
+                                    <!--<volist name="brand_tree" id="vo">-->
+                                        <!--<option value="{$vo.id}" {$vo['p_id']==0?'disabled':''} {$vo['id']==$goods['brand_id']?'selected':''}>{$vo.name}</option>-->
+                                    <!--</volist>-->
+                                <!--</select>-->
+                            <!--</div>-->
+                        <!--</div>-->
+
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">商品分类</label>
+                            <div class="col-sm-2">
+
+                                <input type="text"  value="{$cate['name']}"  class="form-control" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group" >
+                            <label class="col-sm-3 control-label ">颜色</label>
+                            <div class="col-sm-2">
+
+                                <select id="change_color_id" name="color" style="height: 30px;"  >
+                                        <option value="">请选择颜色</option>
+                                    <volist name="color" id="vo">
+                                        <option value="{$vo}">{$vo}</option>
+                                    </volist>
+                                </select>
+                            </div>
+                            <div class="col-sm-1  xuan-color" style="width: 50%;">
+
+                                <notempty name="data_r['color'][0]">
+                                    <volist name="data_r['color']" id="vo">
+                                        <div class='input-group'style='display: inline-block'>
+                                            <input type='text'  name='color' class='form-control' required  style='width: 45px;display: inline-block;' value="{$vo}" disabled><img src="__PUBLIC__/img/del.png" onclick="del_new(this)" style="position: absolute;right: 1px;z-index:9999;">
+                                        </div>
+                                    </volist>
+                                </notempty>
+
+                            </div>
+                        </div>
+
+                        <div class="form-group"   >
+                            <label class="col-sm-3 control-label">规格</label>
+                            <div class="col-sm-2">
+
+                                <select id="spec_change_id" name="guige_val" style="height: 30px;">
+                                    <option value="">请选择规格</option>
+                                    <volist name="cate['guige_val']" id="vo">
+                                        <option value="{$vo}">{$vo}</option>
+                                    </volist>
+                                </select>
+                            </div>
+                            <div class="col-sm-1  xuan-size" style="width: 50%;">
+                                <notempty name="data_r['guige'][0]">
+                                    <volist name="data_r['guige']" id="vo">
+
+                                        <div class='input-group'style='display: inline-block'>
+                                            <input type='text'  name='spec_guige' class='form-control' required  style='width: 45px;display: inline-block;' value="{$vo}" disabled><img src="__PUBLIC__/img/del.png" onclick="del_new(this)" style="position: absolute;right: 1px;z-index:9999;">
+                                        </div>
+
+
+                                    </volist>
+                                </notempty>
+
+                            </div>
+
+                        </div>
+
+
+                        <div>
+                            <!--颜色-->
+                            <div class="form-group  add_attr_color">
+
+                            </div>
+                            <!--规格-->
+                            <div class="form-group  add_attr_spec">
+
+                            </div>
+                        </div>
+
+                        <div class="add_chenge_but">
+
+                        </div>
+
+
+
+                    <!--<form enctype="multipart/form-data" id="myForm" method="post" action="{:U('Goods/guige')}">-->
+                        <table class='table table-striped table-hover table-bordered' id="table">
+
+                                <thead>
+                                    <tr role="row">
+                                        <th>规格</th>
+                                        <th>价格</th>
+                                        <th>库存</th>
+                                        <th>货品图片</th>
+                                        <th>操作</th>
+                                    </tr>
+                                    <volist name="product" id="vo">
+                                        <tr class="p_guige" >
+                                                  <input type="hidden" name="guige_id[]" value="{$vo.id}">
+                                            <td > <input type="text" class="guige" name="guige[]" value="{$vo.guige}"> </td>
+                                            <td>  <input type="text" class="price" name="price[]" value="{$vo.p_price}"> </td>
+                                            <td>  <input type="text" class="stock" name="stock[]" value="{$vo.p_stock}"> </td>
+                                            <td>  <input type="file" onchange="img(this)" name="image[]"    > <img class="imgs" style='width: 100px;'src="./public{$vo.img}"> </td>
+
+                                            <td class="tr-action">
+                                                <a class="btn btn-xs btn-success " onclick="save_guige(this,{$vo.id})"><i class="fa "></i>更新</a>
+
+                                                <a class="btn btn-xs btn-danger td-tr-delete" onclick="del_guige(this,{$vo.id})"><i class="fa fa-trash"></i> 删除</a>
+                                            </td>
+                                        </tr>
+                                    </volist>
+                                </thead>
+                        </table>
+                    </form>
+
+
+
+
+
+
+
+
+
+
+                        <!--<div class="form-group">-->
+                            <!--<label class="col-sm-3 control-label">商品库存</label>-->
+                            <!--<div class="col-sm-2">-->
+                                <!--<input   name="stock" value="{$goods.stock}" class="form-control" type="text">-->
+                            <!--</div>-->
+                        <!--</div>-->
+
+                        <!--<div class="form-group">-->
+                            <!--<label class="col-sm-3 control-label">商品价格</label>-->
+                            <!--<div class="col-sm-2">-->
+                                <!--<input   name="price" value="{$goods.price}" class="form-control" type="text">-->
+                            <!--</div>-->
+                        <!--</div>-->
+
+
+                        <!--<div class="form-group">-->
+                            <!--<label class="col-sm-3 control-label">商品图片</label>-->
+                            <!--<input type="file" name="image[]" id="img" value="" class="files" onchange="shangchuan()" multiple >-->
+                            <!--<div style="width:100%;height: 130px;border: 1px solid #d0d6d6;margin-top: 10px;" id="result">-->
+                                <!--<volist name="goods_img" id="vo">-->
+                                    <!--<span style="width:190px;height: 100px;border:1px dashed #e0e0e0;display:  inline-block;position: relative;margin: 10px 20px;">-->
+                                        <!--<image src="./public/{$vo.path}" alt="" id="imgs" style="width: 100%;height: 100%;"></image>-->
+                                        <!--<h5 data-id="{$vo.id}" class="del" style="background:#C6C6C6;color: #CF5B56;position: absolute;top:-18px;right: -6px;font-size:16px;border:2px solid #e1e3e9;border-radius: 8px; cursor: pointer;" >X</h5>-->
+                                    <!--</span>-->
+                                <!--</volist>-->
+                            <!--</div>-->
+                        <!--</div>-->
+
+                        <div class="form-group">
+                            <div class="col-sm-8 col-sm-offset-3">
+                                <button class="btn btn-primary" type="button">提交</button>
+                                <button class="btn btn-danger" type="button" onclick="javascript:window.history.back(-1);">返回</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<!-- 全局js -->
+<script src="__PUBLIC__/js/jquery.min.js?v=2.1.4"></script>
+<script src="__PUBLIC__/js/bootstrap.min.js?v=3.3.6"></script>
+
+<!-- 自定义js -->
+<script src="__PUBLIC__/js/content.js?v=1.0.0"></script>
+
+<!-- jQuery Validation plugin javascript-->
+<script src="__PUBLIC__/js/plugins/validate/jquery.validate.min.js"></script>
+<script src="__PUBLIC__/js/plugins/validate/messages_zh.min.js"></script>
+
+<script src="__PUBLIC__/js/layer/layer.js"></script>
+
+
+<script src="__PUBLIC__/js/demo/form-validate-demo.js"></script>
+<!-- iCheck -->
+<script src="__PUBLIC__/js/plugins/iCheck/icheck.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.i-checks').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green',
+        });
+    });
+
+
+
+    // $(".noimg").click(function () {
+    //     $(this).css("display", "none");
+    //     $("#imgs").attr("src", "");
+    //     $(".files").val('');
+    // })
+    // $(".files").change(function () {
+    //     alert(1);
+    //     var objUrl = getObjectURL(this.files[0]);
+    //     console.log("objUrl = " + objUrl);
+    //     if (objUrl) {
+    //         $(this).find(".imgs").attr("src", objUrl);
+    //     }
+    // });
+
+    function img(e){
+
+        var objUrl = getObjectURL(e.files[0]);
+        console.log("objUrl = " + objUrl);
+        if (objUrl) {
+            $(e).siblings(".imgs").attr("src", objUrl);
+        }
+
+    }
+    //建立一個可存取到該file的url
+    function getObjectURL(file) {
+        var url = null;
+        if (window.createObjectURL != undefined) { // basic
+            url = window.createObjectURL(file);
+        }
+        else if (window.URL != undefined) {
+            // mozilla(firefox)
+            url = window.URL.createObjectURL(file);
+        }
+        else if (window.webkitURL != undefined) {
+            // webkit or chrome
+            url = window.webkitURL.createObjectURL(file);
+        }
+        return url;
+    }
+
+    var i=0;
+
+    $('#change_color_id').on('change',function(){
+        var val = $("#change_color_id option:selected").val();  //选中的颜色
+
+        if(val!=''){
+            i++;
+            var res=new Array();
+            var color = $(this).find('option:selected').text();
+
+            var has_html=$(".add_chenge_but").text();
+
+            $('.xuan-color').find('.input-group').each(function(){
+                res.push($(this).find('input').val());
+            });
+            // console.log(color,res);return false;
+            if ($.inArray(color,res) != -1) {
+                return false;
+            }
+
+            var  html='';
+            var html1='';
+
+            html +=
+                "<div class='input-group'style='display: inline-block'>" +
+                "<input type='text'  name='color' class='form-control' required  style='width: 45px;display: inline-block;' value="+color+" disabled>" +'<img src="__PUBLIC__/img/del.png" onclick="del_new(this)" style="position: absolute;right: 1px;z-index:9999;">'
+                +
+                "</div> ";
+
+            html1 +="<div class='btn_new btn-success' type='button' >生成</div>" ;
+
+
+            $(".add_chenge_but").replaceWith(html1);
+
+            $(".xuan-color").append(html);
+
+
+        }
+
+    });
+    a=0
+    $('#spec_change_id').on('change',function(){
+
+        a++;
+        var res=new Array();
+        var spec = $(this).find('option:selected').text();  //选中的规格
+
+        $('.xuan-size').find('.input-group').each(function(){
+            res.push($(this).find('input').val());
+        });
+
+        if ($.inArray(spec, res) != -1) {
+            return false;
+        }
+
+
+        var text= $(".add_attr_spec").html();
+        var has_html=$(".add_chenge_but").text();
+
+        var  html='';
+        var  html1='';
+
+        html += "<div class='input-group' style='display: inline-block;margin-right: 4px;'>" +
+            "<input type='text'  name='spec_guige' class='form-control' required style='width: 45px;display: inline-block;' value="+spec+" disabled>" +'<img src="__PUBLIC__/img/del.png" onclick="del_new(this)" style="position: absolute;right: 1px;z-index:9999;">'+
+            "</div>";
+
+
+        html1 +="<div class='btn_new btn-success' type='button' >生成</div>" ;
+
+        $(".add_chenge_but").replaceWith(html1);
+        $(".xuan-size").append(html);
+
+    });
+
+
+    //生成表格
+    $(document).on("click", ".btn_new", function(){
+
+        var color= $(" input[ name='color' ] ");
+console.log(color);
+        var color_list=new Array();
+        var spec_guige=$("input[name='spec_guige']");
+        var spec_list=new Array();
+        // var html="<table class='table table-striped table-hover table-bordered'> <thead><tr role='row'><th>规格</th><th>价格</th><th>库存</th><th>操作</th>";
+
+        for(var i=0;i<color.length;i++){
+            color_list.push($(color[i]).val());//获取value值
+        }
+        for(var i=0;i<spec_guige.length;i++){
+            spec_list.push($(spec_guige[i]).val());//获取value值
+
+        }
+        var html = '';
+       var has_guige=[];
+        $('.p_guige .guige').each(function(){
+            has_guige.push($(this).val());
+        });
+
+        // var html = "<form enctype='multipart/form-data'>";
+        // console.log(color_list,spec_list);return false;
+        if((color_list==''&&spec_list!='')||(color_list!=''&&spec_list=='')){  //颜色和规格只有一个存在
+            var other = color_list+spec_list;
+            var other_ = other.split(',');
+
+            for(var s=0; s<other_.length; s++){
+                html += "<tr class='p_guige'>" +
+                    "<td><input type='text' class='check_all' name='guige[]' value='"+other_[s]+"'></td>" +
+                    "<td><input type='text' class='check_all' name='price[]'></td>" +
+                    "<td><input type='text' class='check_all' name='stock[]'></td>" +
+                    "<th><input type='file' onchange='img(this)'  name='image[]' />" +
+                    " <br/> <img class='imgs' style='width: 100px;'/></th>"+
+
+                    '<td class="tr-action">'+
+                    '<a class="btn btn-xs btn-danger td-tr-delete" onclick="del_table(this)"><i class="fa fa-trash"></i> 删除</a>'+
+                    '</td>'+
+                "</tr>";
+            }
+        }else {   //颜色和规格同时存在
+
+            for (var j = 0; j < spec_list.length; j++) {
+                for (var k = 0; k < color_list.length; k++) {
+                    if(jQuery.inArray( color_list[k] + ',' + spec_list[j], has_guige ) ==-1){
+                        console.log(color_list[k] + ',' + spec_list[j]);
+                        console.log(has_guige);
+                        html += "<tr class='p_guige'>" +
+                            "<td><input type='text' class='check_all' name='guige[]' value='" + color_list[k] + ',' + spec_list[j] + "'></td>" +
+                            "<td><input type='text' class='check_all' name='price[]'></td>" +
+                            "<td><input type='text' class='check_all' name='stock[]'></td>" +
+                            "<th><input type='file' onchange='img(this)' name='image[]' />" +
+                            " <br/> <img class='imgs' style='width: 100px;'/></th>"+
+                            '<td class="tr-action">' +
+                            '<a class="btn btn-xs btn-danger td-tr-delete" onclick="del_table(this)"><i class="fa fa-trash"></i> 删除</a>' +
+                            '</td>'+
+                            "</tr>";
+                    }
+
+//                   for(var q=0; q<has_guige.length;q++){
+//                       if(color_list[k] + ',' + spec_list[j] == has_guige[q]){
+//                           return false;
+//                       }else{
+//
+//                       }
+//                   }
+
+                }
+            }
+        }
+        // html +=" </thead></table>";
+
+        $('#table').find('thead').append(html);
+
+    });
+
+    function del_new(e){
+        $(e).parent('div').remove();
+    }
+    function del_table(e){
+        $(e).parent('td').parent('tr').remove();
+    }
+
+    //提交保存
+    $('.btn-primary').click(function(){
+        var formdata  = new FormData($('#myForm')[0]);
+        $.ajax({
+            url: "{:U('Goods/guige')}",
+            type: 'POST',
+            cache: false,
+            data: formdata,
+            processData: false,
+            contentType: false,
+            success:function(e){
+                if(e.status==1){
+                    layer.msg(e.msg,{icon:1});
+                    window.location.href=e.url;
+                }else{
+                    layer.msg(e.msg,{icon:2});
+                }
+            }
+        });
+    });
+
+
+    function save_guige(e,guige_id){
+        var goods_id = '{$id}';    //商品id
+        var tr = $(e).parent('td').parent('tr');
+        // var guige_id = tr.find('input[name="guige_id[]"]').val(); //products表id
+
+        var guige = tr.find('td:nth-child(2)').find('[name="guige[]"]').val();
+        var p_price = tr.find("td:nth-child(3)").find('[name="price[]"]').val();
+        var p_stock = tr.find("td:nth-child(4)").find('[name="stock[]"]').val();
+        var new_img = tr.find("td:nth-child(5)").find('[name="image[]"]').get(0).files;
+
+        if(new_img.length==0){
+            var img = tr.find("td:nth-child(5)").find('img').attr('src');
+        }
+
+        var formdata = new FormData();
+        formdata.append('goods_id',goods_id);
+        formdata.append('guige_id',guige_id);
+        formdata.append('guige',guige);
+        formdata.append('p_price',p_price);
+        formdata.append('p_stock',p_stock);
+        if(img===undefined){ //有更新图片
+            formdata.append('img[]',new_img[0]);
+        }else{  //无图片更新
+            formdata.append('img',img);
+        }
+        $.ajax({
+            url: "{:U('Goods/save_guige')}",
+            type: 'POST',
+            cache: false,
+            data: formdata,
+            processData: false,
+            contentType: false,
+            success:function(e){
+                if(e.status==1){
+                    layer.msg(e.msg,{icon:1});
+
+                }else{
+                    layer.msg(e.msg,{icon:2});
+                }
+            }
+        });
+    }
+
+
+    //删除商品规格
+    function del_guige(e,id){
+        var td = $(e).parent('td').parent('tr');
+        var goods_id = $('[name="goods_id"]').val();   //商品id （用于统计库存）
+
+        layer.confirm('您确定删除？', {
+                btn: ['确定','取消'] //按钮
+            }, function(){
+                layer.closeAll();
+                $.post("{:U('goods/delete_guige')}",{guige_id:id,goods_id:goods_id},function(e){
+                    if(e.status==1){
+                        layer.msg(e.msg,{icon:1});
+                          td.remove();
+                    }else{  //不可删除
+                        layer.msg(e.msg,{icon:2});
+                    }
+                },'json');
+            }
+        );
+
+
+    }
+
+</script>
+
+
+
+</body>
+
+</html>

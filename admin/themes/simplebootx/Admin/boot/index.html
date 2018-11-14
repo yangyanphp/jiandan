@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+
+    <title> 减单管理平台 </title>
+
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+	<admintpl file="header" />
+</head>
+
+<body class="fixed-sidebar full-height-layout gray-bg" style="overflow:hidden">
+    <div id="wrapper">
+        <!--左侧导航开始-->
+        <nav class="navbar-default navbar-static-side" role="navigation">
+            <div class="nav-close"><i class="fa fa-times-circle"></i>
+            </div>
+            <div class="sidebar-collapse">
+                <ul class="nav" id="side-menu">
+                    <li class="nav-header">
+                        <div class="dropdown profile-element">
+                            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                                <span class="clear">
+                                    <span class="block m-t-xs" style="font-size:20px;">
+                                        <i class="fa fa-area-chart"></i>
+                                        <strong class="font-bold">减单管理平台</strong>
+                                    </span>
+                                </span>
+                            </a>
+                        </div>
+                        <div class="logo-element">减单
+                        </div>
+                    </li>
+                    <li class="hidden-folded padder m-t m-b-sm text-muted text-xs">
+                        <span class="ng-scope">管理</span>
+                    </li>
+                    <li>
+                        <a class="J_menuItem" href="{:U('admin/index/index_right')}">
+                            <i class="fa fa-home"></i>
+                            <span class="nav-label">主页</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="J_menuItem" href="{:U('admin/member/index')}">
+                            <i class="fa fa-user"></i>
+                            <span class="nav-label">用户管理</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="J_menuItem" href="{:U('admin/return/index')}">
+                            <i class="fa fa-money"></i>
+                            <span class="nav-label">返现设置</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="J_menuItem" href="{:U('admin/cash/index')}">
+                            <i class="fa fa-money"></i>
+                            <span class="nav-label">用户返现记录</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="J_menuItem" href="{:U('admin/red/index')}">
+                            <i class="fa fa-money"></i>
+                            <span class="nav-label">拉新红包设置</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="J_menuItem" href="{:U('admin/robot/index')}">
+                            <i class="fa fa-money"></i>
+                            <span class="nav-label">机器人设置</span>
+                        </a>
+                    </li>
+                 	<li>
+                        <a class="J_menuItem" href="{:U('admin/video/jiaocheng')}">
+                            <i class="fa fa-file-video-o"></i>
+                            <span class="nav-label">视频教程</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="J_menuItem" href="{:U('admin/video/background')}">
+                            <i class="fa fa-video-camera"></i>
+                            <span class="nav-label">背景视频</span>
+                        </a>
+                    </li>
+					<li>
+                        <a class="J_menuItem" href="{:U('admin/tixian/index')}">
+                            <i class="fa fa-cny"></i>
+                            <span class="nav-label">提现设置</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="J_menuItem" href="{:U('admin/send/index')}">
+                            <i class="fa fa-send"></i>
+                            <span class="nav-label">消息群发</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fa fa fa-database"></i>
+                            <span class="nav-label">数据库管理</span>
+                            <span class="fa arrow"></span>
+                        </a>
+                        <ul class="nav nav-second-level">
+                            <li>
+                                <a class="J_menuItem" href="{:U('admin/backup/index')}">数据备份</a>
+                            </li>
+                            <li>
+                                <a class="J_menuItem" href="{:U('admin/backup/restore')}">数据还原</a>
+                            </li>
+
+                        </ul>
+                    </li>
+
+                    <li>
+                        <a href="#">
+                            <i class="glyphicon glyphicon-th-large"></i>
+                            <span class="nav-label">自营商品</span>
+                            <span class="fa arrow"></span>
+                        </a>
+                        <ul class="nav nav-second-level">
+                            <li>
+                                <a class="J_menuItem" href="{:U('admin/goods/index')}">商品管理</a>
+                            </li>
+                            <li>
+                                <a class="J_menuItem" href="{:U('admin/goods/goodscat')}">商品分类</a>
+                            </li>
+                            <li>
+                                <a class="J_menuItem" href="{:U('admin/goods/brand_list')}">商品品牌</a>
+                            </li>
+                            <li>
+                                <a class="J_menuItem" href="{:U('admin/goods/attribute_list')}">商品属性</a>
+                            </li>
+                            <li>
+                                <a class="J_menuItem" href="{:U('admin/goods/zy_order_list')}">自营订单</a>
+                            </li>
+                            <li>
+                                <a class="J_menuItem" href="{:U('admin/goods/price_scale')}">商品价格比例</a>
+                            </li>
+                            <li>
+                                <a class="J_menuItem" href="{:U('admin/goods/product_screen')}">商品种类删选</a>
+                            </li>
+
+
+                        </ul>
+                    </li>
+                    <li>
+                        <a class="J_menuItem" href="{:U('admin/index/customer_service')}">
+                            <i class="fa fa-user"></i>
+                            <span class="nav-label">客服热线</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="J_menuItem" href="{:U('admin/setting/clearcache')}">
+                                <i class="fa fa-paint-brush"></i>
+                            <span class="nav-label">清除缓存</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <!--左侧导航结束-->
+        <!--右侧部分开始-->
+        <div id="page-wrapper" class="gray-bg dashbard-1">
+             <div class="row border-bottom">
+                <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+
+                    <ul class="nav navbar-top-links navbar-right">
+
+                        <li class="dropdown">
+                            <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
+                                <i class="fa fa-user"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-alerts" style="width:150px;">
+                                <li>
+                                    <a href="#" onclick="updatePass()">
+                                        <div>
+                                            <i class="fa fa-pencil-square-o"></i>  修改密码
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="divider"></li>
+                                <li>
+                                    <a href="{:U('admin/public/logout')}">
+                                        <div>
+                                            <i class="fa fa-power-off"></i>  退出
+
+                                        </div>
+                                    </a>
+                                </li>
+
+                            </ul>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="row J_mainContent" id="content-main">
+                <iframe id="J_iframe" width="100%" height="100%" src="{:U('admin/index/index_right')}" frameborder="0" data-id="{:U('admin/index/index_right')}" seamless></iframe>
+            </div>
+        </div>
+        <!--右侧部分结束-->
+    </div>
+
+    <!-- 自定义js -->
+    <script src="__PUBLIC__/js/hAdmin.js?v=4.1.0"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/index.js"></script>
+
+    <!-- 第三方插件 -->
+    <script src="__PUBLIC__/js/plugins/pace/pace.min.js"></script>
+	<script>
+		function updatePass(){
+			//页面层
+			layer.open({
+			  type: 1,
+			  skin: 'layui-layer-rim', //加上边框
+			  area: ['490px', '240px'], //宽高
+			  content: '<form class="form-horizontal" method="post" action="{:U("admin/public/updatePass")}" onsubmit="return checkSub()">'+
+                  		'<div class="form-group" style="margin-right:0;text-align:center;margin-top:25px">'+
+              			'<label class="col-sm-3 control-label col-sm-offset-2">新密码：</label>'+
+              			'<div class="col-sm-5">'+
+                  		'<input type="password" placeholder="新密码" class="form-control" name="pwd" id="pwd1">'+
+              			'</div>'+
+          				'</div>'+
+          				'<div class="form-group" style="margin-right:0;text-align:center;">'+
+              			'<label class="col-sm-3 control-label col-sm-offset-2">确认密码：</label>'+
+              			'<div class="col-sm-5">'+
+                  		'<input type="password" placeholder="确认密码" class="form-control" id="pwd2">'+
+              			'</div>'+
+          				'</div>'+
+          				'<div class="form-group" style="margin-right:0; text-align:center;">'+
+			            '<div class="col-sm-offset-3 col-sm-8">'+
+			            '<button class="btn btn-sm btn-info" type="submit" style="margin-left:-26%;">修  改</button>'+
+			            '</div>'+
+			            '</div>'+
+			      		'</form>'
+			});
+		}
+
+		function checkSub(){
+			var pwd1 = $("#pwd1").val();
+			var pwd2 = $("#pwd2").val();
+			if(pwd1==""){
+				parent.layer.alert('密码不能为空');
+				return false;
+			}else if(pwd2==""){
+				parent.layer.alert('确认密码不能为空');
+				return false;
+			}else if(pwd1!=pwd2){
+				parent.layer.alert('两次输入的密码不一致');
+				return false;
+			}
+			return true;
+		}
+	</script>
+</body>
+
+</html>

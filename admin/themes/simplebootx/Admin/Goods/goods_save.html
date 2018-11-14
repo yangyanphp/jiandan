@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <title>返现等级</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="__PUBLIC__/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="__PUBLIC__/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="__PUBLIC__/css/animate.css" rel="stylesheet">
+    <link href="__PUBLIC__/css/style.css?v=4.1.0" rel="stylesheet">
+    <link href="__PUBLIC__/css/plugins/iCheck/custom.css" rel="stylesheet">
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+
+    <div class="row">
+
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>商品设置</h5>
+
+                </div>
+                <div class="ibox-content">
+                    <form class="form-horizontal m-t" id="signupForm" method="post" action="{:U('admin/return/add_post')}">
+                        <input type="hidden" name="id" value="{$_GET['id']}">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">商品名称：</label>
+                            <div class="col-sm-2">
+                                <input id="level_name" name="goods_name" value="{$goods.goods_name}" class="form-control" type="text">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">商品品牌</label>
+                            <div class="col-sm-2">
+                                <select name="brand_id" >
+                                    <option value="0">请选择品牌</option>
+                                    <volist name="brand_tree" id="vo">
+                                        <option value="{$vo.id}" {$vo['p_id']==0?'disabled':''} {$vo['id']==$goods['brand_id']?'selected':''}>{$vo.name}</option>
+                                    </volist>
+                                </select>
+                            </div>
+                        </div>
+
+
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">商品分类</label>
+                            <div class="col-sm-2">
+                                <select name="cate_id" >
+                                    <option value="0">请选择所属分类</option>
+                                    <volist name="cate_tree" id="vo">
+                                        <option value="{$vo.id}" {$vo['id']==$goods['cate_id']?'selected':''}>{$vo.name}</option>
+                                    </volist>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">商品库存</label>
+                            <div class="col-sm-2">
+                                <input   name="stock" value="{$goods.stock}" class="form-control" type="text">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">商品价格</label>
+                            <div class="col-sm-2">
+                                <input   name="price" value="{$goods.price}" class="form-control" type="text">
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">商品图片</label>
+                            <input type="file" name="image[]" id="img" value="" class="files" onchange="shangchuan()" multiple >
+                            <div style="width:100%;height: 130px;border: 1px solid #d0d6d6;margin-top: 10px;" id="result">
+                                <volist name="goods_img" id="vo">
+                                    <span style="width:190px;height: 100px;border:1px dashed #e0e0e0;display:  inline-block;position: relative;margin: 10px 20px;">
+                                        <image src="./public/{$vo.path}" alt="" id="imgs" style="width: 100%;height: 100%;"></image>
+                                        <h5 data-id="{$vo.id}" class="del" style="background:#C6C6C6;color: #CF5B56;position: absolute;top:-18px;right: -6px;font-size:16px;border:2px solid #e1e3e9;border-radius: 8px; cursor: pointer;" >X</h5>
+                                    </span>
+                                </volist>
+                            </div>
+                        </div>
+
+
+
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">PK券</label>
+                            <div class="col-sm-2">
+                                <input  name="pk" value="{$goods.pk}" class="form-control" type="text" aria-required="true" aria-invalid="true" class="error" placeholder="设置PK券">
+                            </div>
+                        </div>
+
+                        <!--<div class="form-group">-->
+                            <!--<label class="col-sm-3 control-label">是否为默认：</label>-->
+                            <!--<div class="col-sm-2">-->
+                                <!--<div class="radio i-checks">-->
+                                    <!--<label>-->
+                                        <!--<input type="radio" value="1" name="is_default"> <i></i>是-->
+                                    <!--</label>-->
+                                    <!--<label>-->
+                                        <!--<input type="radio" checked="" value="0" name="is_default"> <i></i>否-->
+                                    <!--</label>-->
+                                <!--</div>-->
+
+                            <!--</div>-->
+                        <!--</div>-->
+                        <div class="form-group">
+                            <div class="col-sm-8 col-sm-offset-3">
+                                <button class="btn btn-primary" type="button">提交</button>
+                                <button class="btn btn-danger" type="button" onclick="javascript:window.history.back(-1);">返回</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<!-- 全局js -->
+<script src="__PUBLIC__/js/jquery.min.js?v=2.1.4"></script>
+<script src="__PUBLIC__/js/bootstrap.min.js?v=3.3.6"></script>
+
+<!-- 自定义js -->
+<script src="__PUBLIC__/js/content.js?v=1.0.0"></script>
+
+<!-- jQuery Validation plugin javascript-->
+<script src="__PUBLIC__/js/plugins/validate/jquery.validate.min.js"></script>
+<script src="__PUBLIC__/js/plugins/validate/messages_zh.min.js"></script>
+
+<script src="__PUBLIC__/js/layer/layer.js"></script>
+
+
+<script src="__PUBLIC__/js/demo/form-validate-demo.js"></script>
+<!-- iCheck -->
+<script src="__PUBLIC__/js/plugins/iCheck/icheck.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.i-checks').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green',
+        });
+    });
+
+
+
+    // $(".noimg").click(function () {
+    //     $(this).css("display", "none");
+    //     $("#imgs").attr("src", "");
+    //     $(".files").val('');
+    // })
+    // $(".files").change(function () {
+    //
+    //     var objUrl = getObjectURL(this.files[0]);
+    //     console.log("objUrl = " + objUrl);
+    //     if (objUrl) {
+    //         $("#imgs").attr("src", objUrl);
+    //     }
+    // });
+    // //建立一個可存取到該file的url
+    // function getObjectURL(file) {
+    //     var url = null;
+    //     if (window.createObjectURL != undefined) { // basic
+    //         url = window.createObjectURL(file);
+    //     }
+    //     else if (window.URL != undefined) {
+    //         // mozilla(firefox)
+    //         url = window.URL.createObjectURL(file);
+    //     }
+    //     else if (window.webkitURL != undefined) {
+    //         // webkit or chrome
+    //         url = window.webkitURL.createObjectURL(file);
+    //     }
+    //     return url;
+    // }
+
+
+
+
+    //点击‘选择图片’
+    function shangchuan (){
+        var tel = 'img';
+        var res = 'result';
+        readAsDataURL(tel, res);
+    }
+
+    function readAsDataURL(tel,res){
+
+        var file = document.getElementById(tel).files;
+//                    console.log(file);
+        var result=document.getElementById(res);
+        console.log(file,result);
+        if(result.innerHTML){
+            result.innerHTML='';
+        }
+
+        for(  i = 0; i< file.length; i ++) {
+            var reader    = new FileReader();
+            //将文件以Data URL形式读入页面
+            reader.readAsDataURL(file[i]);
+
+            reader.onload=function(){
+                //多图预览
+                // result.innerHTML += '<div style="display:inline"><img style="width:110px;height:110px;" src="' + this.result +'" alt="" /></div>';
+                result.innerHTML += '<span  style="width:190px;height: 100px;border:1px dashed #e0e0e0;display: inline-block;margin: 10px 20px;"><image style="width:100%;height:100%;" src="' + this.result +'" alt="" /></span>';
+
+            };
+
+
+        }
+
+    }
+
+    $('.btn-primary').click(function(){
+        var formdata = new FormData();
+
+        var name = $('[name="goods_name"]').val();                       //商品名
+        var brand_id = $('[name="brand_id"] option:selected').val();     //品牌
+        var cate_id = $('[name="cate_id"] option:selected').val();       //所属分类
+        var stock = $('[name="stock"]').val();                           //库存
+        var price = $('[name="price"]').val();                           //价格
+        var pk = $('[name="pk"]').val();                                 //pk券
+        // console.log(name,brand_id,cate_id,stock,price,pk);return false;
+        var id = $('[name="id"]').val();
+        formdata.append('edit_id',id?id:'');                          //编辑的标识id
+        formdata.append('goods_name',name);
+        formdata.append('brand_id',brand_id);
+        formdata.append('cate_id',cate_id);
+        formdata.append('stock',stock);
+        formdata.append('price',price);
+        formdata.append('pk',pk);
+
+        var img = $('[name="image[]"]').get(0).files;                      //图片
+        for(var i=0; i<img.length;i++){
+            formdata.append('img[]',img[i]);
+        }
+
+        $.ajax({
+            url: "{:U('admin/goods/goods_save')}",
+            type: 'POST',
+            cache: false,
+            data: formdata,
+            processData: false,
+            contentType: false,
+            success:function(e){
+                if(e.status==1){
+                    layer.msg(e.msg,{icon:1});
+                    window.location.href=e.url;
+                }else{
+                    layer.msg(e.msg,{icon:2});
+
+                }
+            }
+        });
+
+
+    });
+
+
+    //编辑时删除图片
+    $('.del').click(function(){
+        var id = $(this).attr('data-id');
+        var this_img = $(this).parent('span');
+        layer.confirm('您确定删除？', {
+                btn: ['确定','取消'] //按钮
+            }, function(){
+                layer.closeAll();
+                $.post("{:U('goods/del_goods_img')}",{id:id},function(e){
+                    if(e.status==1){
+                        layer.msg(e.msg,{icon:1});
+                        this_img.remove();
+                    }else{
+                        layer.msg(e.msg,{icon:2});
+                    }
+                },'json');
+
+            }
+        );
+    });
+
+
+
+
+</script>
+
+
+
+</body>
+
+</html>

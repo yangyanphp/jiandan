@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <title>商品属性</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="__PUBLIC__/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="__PUBLIC__/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="__PUBLIC__/css/animate.css" rel="stylesheet">
+    <link href="__PUBLIC__/css/style.css?v=4.1.0" rel="stylesheet">
+    <link href="__PUBLIC__/css/plugins/iCheck/custom.css" rel="stylesheet">
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+
+    <div class="row">
+
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>商品属性</h5>
+
+                </div>
+                <div class="ibox-content">
+                    <form class="form-horizontal m-t" id="signupForm" method="post" action="{:U('admin/goods/attribute_save')}" enctype="multipart/form-data">
+
+                        <input type="hidden" name="id" value="{$data.id}">
+                        <div class="form-group">
+                            <span> <h5 class="add-article-box-title" style="font-size: 17px;">所属分类</h5></span>
+                            <div class="col-sm-8">
+                                <php>
+                                    if($edit_id){
+                                </php>
+                                <input  readonly="readonly" class="form-control" type="text" value="{$list.name}" >
+                                <php>
+                                    }else{
+                                </php>
+                                <select name="cate_id"   class="col-sm-5" style="height: 30px">
+                                    <foreach name="data" item="vo">
+                                        <option value="{$vo.id}"  <php>if($p_id==$vo['id']){</php> selected='selected'<php>}</php>  ><?php echo $vo['name']; ?></option>
+                                    </foreach>
+                                </select>
+                                <php>
+                                    }
+                                </php>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <h5 class="add-article-box-title" style="font-size: 17px;"><span>分类属性</span></h5>
+                            <input name="val" class="form-control" type="text" value="{$list.val}" placeholder="多属性用英文逗号分隔">
+                        </div>
+
+
+
+
+                        <div class="form-group">
+                            <div class="col-sm-8 col-sm-offset-3">
+                                <input type="hidden" name="edit_id" value="{$edit_id?$edit_id:0}">
+                                <button class="btn btn-primary" type="submit">提交</button>
+                                <button class="btn btn-danger" type="button" onclick="javascript:window.history.back(-1);">返回</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<!-- 全局js -->
+<script src="__PUBLIC__/js/jquery.min.js?v=2.1.4"></script>
+<script src="__PUBLIC__/js/bootstrap.min.js?v=3.3.6"></script>
+
+<!-- 自定义js -->
+<script src="__PUBLIC__/js/content.js?v=1.0.0"></script>
+
+<!-- jQuery Validation plugin javascript-->
+<script src="__PUBLIC__/js/plugins/validate/jquery.validate.min.js"></script>
+<script src="__PUBLIC__/js/plugins/validate/messages_zh.min.js"></script>
+
+<script src="__PUBLIC__/js/demo/form-validate-demo.js"></script>
+<script src="__PUBLIC__/js/layer/layer.js"></script>
+
+<!-- iCheck -->
+<script src="__PUBLIC__/js/plugins/iCheck/icheck.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.i-checks').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green',
+        });
+    });
+
+    $(".noimg").click(function () {
+        $(this).css("display", "none");
+        $("#imgs").attr("src", "");
+        $(".files").val('');
+    })
+    $(".files").change(function () {
+        var objUrl = getObjectURL(this.files[0]);
+        console.log("objUrl = " + objUrl);
+        if (objUrl) {
+            $("#imgs").attr("src", objUrl);
+        }
+    });
+    //建立一個可存取到該file的url
+    function getObjectURL(file) {
+        var url = null;
+        if (window.createObjectURL != undefined) { // basic
+            url = window.createObjectURL(file);
+        }
+        else if (window.URL != undefined) {
+            // mozilla(firefox)
+            url = window.URL.createObjectURL(file);
+        }
+        else if (window.webkitURL != undefined) {
+            // webkit or chrome
+            url = window.webkitURL.createObjectURL(file);
+        }
+        return url;
+    }
+
+//    $('.btn-primary').click(function(){
+//        var formdata = new FormData();
+//
+//        formdata.append('id',$('[name="id"]').val());
+//        formdata.append('pid',$('[name="pid"] option:selected').val());
+//        formdata.append('brand_name',$('[name="brand_name"]').val());
+//
+//        var img = $('[name="brand_cate_img[]"]').get(0).files;
+//         for(var i=0; i<img.length; i++){
+//             formdata.append('img[]',img[i]);
+//         }
+//        $.ajax({
+//            url: "{:U('admin/goods/brand_save')}",
+//            type: 'POST',
+//            cache: false,
+//            data: formdata,
+//            processData: false,
+//            contentType: false,
+//            success:function(e){
+//                if(e.status==1){
+//                    layer.msg(e.msg,{icon:1});
+//                    window.location.relaod;
+//                }else{
+//                    layer.msg(e.msg,{icon:2});
+//
+//                }
+//            }
+//        });
+//    });
+
+
+
+</script>
+
+
+
+</body>
+
+</html>

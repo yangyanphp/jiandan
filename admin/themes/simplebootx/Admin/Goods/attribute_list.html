@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <title>规格列表</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+
+    <link rel="shortcut icon" href="favicon.ico"> <link href="__PUBLIC__/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="__PUBLIC__/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+
+    <!-- Data Tables -->
+    <link href="__PUBLIC__/css/plugins/dataTables/dataTables.bootstrap.css" rel="stylesheet">
+
+    <link href="__PUBLIC__/css/animate.css" rel="stylesheet">
+    <link href="__PUBLIC__/css/style.css?v=4.1.0" rel="stylesheet">
+
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>规格列表</h5>
+                    <div class="ibox-tools">
+                        <button class="btn btn-success" type="button" onclick="commonlayer('设置颜色','{:U('Goods/set_color')}','60%','70%')" ><i class="fa fa-plus"></i>&nbsp;设置颜色库</button>
+
+                        <a class="collapse-link" href="{:U('admin/goods/attribute_save')}">
+                            <button class="btn btn-success" type="button"><i class="fa fa-plus"></i>&nbsp;添加</button>
+                        </a>
+
+                    </div>
+                </div>
+                <div class="ibox-content">
+
+                    <table class="table table-striped table-bordered table-hover dataTables-example">
+                        <thead>
+                        <tr>
+                            <th>序号</th>
+                            <th>分类名称</th>
+                            <th>属性</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <volist name="list" id="vo">
+                            <tr class="gradeX">
+                                <td>{$vo.id}</td>
+                                <td>{$vo.name}</td>
+                                <td>{$vo.val}</td>
+                                <td>
+                                    <a class="btn btn-white btn-bitbucket" href="{:U('goods/attribute_save',array('id'=>$vo['id']))}">
+                                        <i class="fa fa-edit"></i>
+                                    </a>
+                                    <a class="btn btn-white btn-bitbucket" onclick="deldata({$vo['id']})">
+                                        <i class="fa fa-times"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        </volist>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 全局js -->
+<script src="__PUBLIC__/js/jquery.min.js?v=2.1.4"></script>
+<script src="__PUBLIC__/js/bootstrap.min.js?v=3.3.6"></script>
+
+
+
+<script src="__PUBLIC__/js/plugins/jeditable/jquery.jeditable.js"></script>
+
+<!-- Data Tables -->
+<script src="__PUBLIC__/js/plugins/dataTables/jquery.dataTables.js"></script>
+<script src="__PUBLIC__/js/plugins/dataTables/dataTables.bootstrap.js"></script>
+<script src="__PUBLIC__/js/layer/layer.js"></script>
+
+
+<!-- 自定义js -->
+<script src="__PUBLIC__/js/content.js?v=1.0.1"></script>
+
+
+<!-- Page-Level Scripts -->
+<script>
+
+
+    function deldata(val){
+        //询问框
+        parent.layer.confirm('您确认删除吗？', {
+            btn: ['是','否'], //按钮
+            shade: false //不显示遮罩
+        }, function(){
+            $.post("{:U('goods/deleteattribute')}",{id:val},
+                function(data){
+                    if(data){
+                        parent.layer.msg('删除成功', {icon: 1});
+                        window.location.reload();
+                    }
+                },
+                "text");
+
+        });
+    }
+
+    // function commonlayer(title,url,width,height)
+    // {
+    //     alert(1);
+    //     layer.open({
+    //         type: 2,
+    //         title:title,
+    //         area: [width, height],
+    //         content:url,
+    //     });
+    // }
+
+
+
+
+
+
+
+
+</script>
+
+
+
+
+</body>
+
+</html>

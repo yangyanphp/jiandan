@@ -1,0 +1,130 @@
+<admintpl file="header" />
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>自营订单列表</h5>
+                    <div class="ibox-tools">
+
+
+                    </div>
+                </div>
+                <div class="ibox-tools">
+                    <from class="collapse-link" action="{:U('admin/goods/zy_order_list')}">
+                        <input class="btn btn-success" type="text">
+                        <button type="submit">搜索</button>
+
+                    </from>
+                </div>
+                <div class="ibox-content">
+
+                    <table class="table table-striped table-bordered table-hover ">
+                        <thead>
+                        <tr>
+                            <th>订单ID</th>
+                            <th>订单号</th>
+                            <th>商品名</th>
+                            <th>购买数量</th>
+                            <th>支付金</th>
+                            <th>收获人</th>
+                            <th>收获地址</th>
+                            <th>电话</th>
+                            <th>订单状态</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <foreach name="data" item="vo">
+                            <tr class="gradeX">
+                                <td>{$vo.order_id}</td>
+                                <td>{$vo.order_sn}</td>
+                                <td>{$vo.goods_name}</td>
+                                <td>{$vo.total_num}</td>
+                                <td>{$vo.total_moeny}</td>
+                                <td>{$vo.consignee}</td>
+                                <td>{$vo.user_addr}</td>
+                                <td>{$vo.mobile}</td>
+                                <td>
+                                    <php>
+                                        if($vo['order_status']==0){
+                                    </php>
+                                    <a class="btn btn-success btn-rounded" href="#">待付款</a>
+                                    <php>
+                                        }else if($vo['order_status']==1){
+                                    </php>
+                                    <a class="btn btn-default btn-rounded" href="#">已付款</a>
+                                    <php>
+                                        }else if($vo['order_status']==3){
+                                    </php>
+                                    <a class="btn btn-default btn-rounded" href="#">已完成</a>
+                                    <php>
+                                        }
+                                    </php>
+                                </td>
+                                <td>
+                                    <a class="btn btn-white btn-bitbucket" onclick="commonlayer('订单详情','{:U('Goods/order_details',array('order_id'=>$vo['order_id']))}','80%','80%')" >
+                                        <i class="fa fa-times">订单详情</i>
+                                    </a>
+                                </td>
+                            </tr>
+                        </foreach>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 全局js -->
+<script src="__PUBLIC__/js/jquery.min.js?v=2.1.4"></script>
+<script src="__PUBLIC__/js/bootstrap.min.js?v=3.3.6"></script>
+
+
+
+<script src="__PUBLIC__/js/plugins/jeditable/jquery.jeditable.js"></script>
+
+<!-- Data Tables -->
+<script src="__PUBLIC__/js/plugins/dataTables/jquery.dataTables.js"></script>
+<script src="__PUBLIC__/js/plugins/dataTables/dataTables.bootstrap.js"></script>
+
+<!-- 自定义js -->
+<script src="__PUBLIC__/js/content.js?v=1.0.0"></script>
+<script src="__PUBLIC__/js/plugins/layer/layer.min.js"></script>
+
+<!-- 自定义js -->
+<script src="__PUBLIC__/js/content.js?v=1.0.0"></script>
+<script src="__PUBLIC__/js/demo/layer-demo.js"></script>
+<!-- Page-Level Scripts -->
+<script>
+    function deldata(val){
+        //询问框
+        parent.layer.confirm('您确认删除吗？', {
+            btn: ['是','否'], //按钮
+            shade: false //不显示遮罩
+        }, function(){
+            $.post("{:U('goods/deletecat')}",{id:val},
+                function(data){
+                    if(data == 0){
+                        parent.layer.msg('请先删除子类', {icon: 1});
+                    }else{
+                        parent.layer.msg('删除成功', {icon: 1});
+                        window.location.reload();
+                    }
+                },
+                "text");
+
+        });
+    }
+
+</script>
+
+
+
+
+</body>

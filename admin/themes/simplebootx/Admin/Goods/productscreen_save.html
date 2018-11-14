@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <title>返现等级</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="__PUBLIC__/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="__PUBLIC__/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="__PUBLIC__/css/animate.css" rel="stylesheet">
+    <link href="__PUBLIC__/css/style.css?v=4.1.0" rel="stylesheet">
+    <link href="__PUBLIC__/css/plugins/iCheck/custom.css" rel="stylesheet">
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+
+    <div class="row">
+
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>商品种类选择</h5>
+
+                </div>
+                <div class="ibox-content">
+                    <form class="form-horizontal m-t"  method="post" action="{:U('admin/goods/productscreen_save')}">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">商品货源地</label>
+                            <div class="col-sm-2">
+                                <select name="theshopid" >
+                                    <option value="0" {$list['theshopid'] == 0?"selected":""}>全部</option>
+                                    <option value="1" {$list['theshopid'] == 1?"selected":""}>杭州</option>
+                                    <option value="2" {$list['theshopid'] == 2?"selected":""}>濮院 </option>
+                                    <option value="5" {$list['theshopid'] == 5?"selected":""}>广州</option>
+                                    <option value="6" {$list['theshopid'] == 6?"selected":""}>织里</option>
+                                </select>
+                            </div>
+                        </div>
+
+                         <div class="form-group">
+                            <label class="col-sm-3 control-label">排序字段</label>
+                            <div class="col-sm-2">
+                                <select name="orderfiled" >
+                                    <option value="1" {$list['orderfiled'] == 1?"selected":""}>人气</option>
+                                    <option value="2" {$list['orderfiled'] == 2?"selected":""}>代表7天销量</option>
+                                    <option value="3" {$list['orderfiled'] == 3?"selected":""}>价格 </option>
+                                    <option value="4" {$list['orderfiled'] == 4?"selected":""}>代表(上新时间)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">排序方式</label>
+                            <div class="col-sm-2">
+                                <select name="ordertype" >
+                                    <option value="0" {$list['ordertype'] == 0?"selected":""}>降序</option>
+                                    <option value="1" {$list['ordertype'] == 1?"selected":""}>升序</option>
+                                </select>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">价格删选最小值</label>
+                            <input type='text' name='minprice' value='{$list.minprice}'>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">价格删选最大值</label>
+                            <input type='text' name='maxprice' value='{$list.maxprice}'>
+                        </div>
+
+
+                         <div class="form-group">
+                            <label class="col-sm-3 control-label">季节类型</label>
+                            <div class="col-sm-2">
+                                <select name="seasontype" >
+                                    <option value="0" {$list['seasontype'] == 0?"selected":""}>全部</option>
+                                    <option value="1" {$list['seasontype'] == 1?"selected":""}>春秋装</option>
+                                    <option value="2" {$list['seasontype'] == 2?"selected":""}>夏装</option>
+                                    <option value="3" {$list['seasontype'] == 3?"selected":""}>冬装</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">年龄类型</label>
+                            <div class="col-sm-2">
+                                <select name="agegrouptype" >
+                                    <option value="0" {$list['agegrouptype'] == 0?"selected":""}>全部</option>
+                                    <option value="1" {$list['agegrouptype'] == 1?"selected":""}>年轻款</option>
+                                    <option value="2" {$list['agegrouptype'] == 2?"selected":""}>中老年</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">是否需要筛选原图</label>
+                            <div class="col-sm-2">
+                                <select name="isoriginalimg" >
+                                    <option value="0" {$list['isoriginalimg'] == 0?"selected":""}>不需要</option>
+                                    <option value="1" {$list['isoriginalimg'] == 1?"selected":""}>需要</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">是否需要筛选实力商家</label>
+                            <div class="col-sm-2">
+                                <select name="ispowerbrand" >
+                                    <option value="0" {$list['ispowerbrand'] == 0?"selected":""}>不需要</option>
+                                    <option value="1" {$list['ispowerbrand'] == 1?"selected":""}>需要</option>
+                                </select>
+                            </div>
+                        </div>
+
+                         <div class="form-group">
+                            <label class="col-sm-3 control-label">是否需要筛选是否是工厂认证</label>
+                            <div class="col-sm-2">
+                                <select name="isfactory" >
+                                    <option value="0" {$list['isfactory'] == 0?"selected":""}>不需要</option>
+                                    <option value="1" {$list['isfactory'] == 1?"selected":""}>需要</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">是否需要筛选八天退货</label>
+                            <div class="col-sm-2">
+                                <select name="isrefund" >
+                                    <option value="0" {$list['isrefund'] == 0?"selected":""}>不需要</option>
+                                    <option value="1" {$list['isrefund'] == 1?"selected":""}>需要</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        
+                        <div class="form-group">
+                            <div class="col-sm-8 col-sm-offset-3">
+                                <button class="btn btn-primary" type="submit">提交</button>
+                                <button class="btn btn-danger" type="button" onclick="javascript:window.history.back(-1);">返回</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<!-- 全局js -->
+<script src="__PUBLIC__/js/jquery.min.js?v=2.1.4"></script>
+<script src="__PUBLIC__/js/bootstrap.min.js?v=3.3.6"></script>
+
+<!-- 自定义js -->
+<script src="__PUBLIC__/js/content.js?v=1.0.0"></script>
+
+<!-- jQuery Validation plugin javascript-->
+<script src="__PUBLIC__/js/plugins/validate/jquery.validate.min.js"></script>
+<script src="__PUBLIC__/js/plugins/validate/messages_zh.min.js"></script>
+
+<script src="__PUBLIC__/js/layer/layer.js"></script>
+
+
+<script src="__PUBLIC__/js/demo/form-validate-demo.js"></script>
+<!-- iCheck -->
+<script src="__PUBLIC__/js/plugins/iCheck/icheck.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.i-checks').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green',
+        });
+    });
+
+
+
+    // $(".noimg").click(function () {
+    //     $(this).css("display", "none");
+    //     $("#imgs").attr("src", "");
+    //     $(".files").val('');
+    // })
+    // $(".files").change(function () {
+    //
+    //     var objUrl = getObjectURL(this.files[0]);
+    //     console.log("objUrl = " + objUrl);
+    //     if (objUrl) {
+    //         $("#imgs").attr("src", objUrl);
+    //     }
+    // });
+    // //建立一個可存取到該file的url
+    // function getObjectURL(file) {
+    //     var url = null;
+    //     if (window.createObjectURL != undefined) { // basic
+    //         url = window.createObjectURL(file);
+    //     }
+    //     else if (window.URL != undefined) {
+    //         // mozilla(firefox)
+    //         url = window.URL.createObjectURL(file);
+    //     }
+    //     else if (window.webkitURL != undefined) {
+    //         // webkit or chrome
+    //         url = window.webkitURL.createObjectURL(file);
+    //     }
+    //     return url;
+    // }
+
+
+
+
+    //点击‘选择图片’
+//     function shangchuan (){
+//         var tel = 'img';
+//         var res = 'result';
+//         readAsDataURL(tel, res);
+//     }
+
+//     function readAsDataURL(tel,res){
+
+//         var file = document.getElementById(tel).files;
+// //                    console.log(file);
+//         var result=document.getElementById(res);
+//         console.log(file,result);
+//         if(result.innerHTML){
+//             result.innerHTML='';
+//         }
+
+//         for(  i = 0; i< file.length; i ++) {
+//             var reader    = new FileReader();
+//             //将文件以Data URL形式读入页面
+//             reader.readAsDataURL(file[i]);
+
+//             reader.onload=function(){
+//                 //多图预览
+//                 // result.innerHTML += '<div style="display:inline"><img style="width:110px;height:110px;" src="' + this.result +'" alt="" /></div>';
+//                 result.innerHTML += '<span  style="width:190px;height: 100px;border:1px dashed #e0e0e0;display: inline-block;margin: 10px 20px;"><image style="width:100%;height:100%;" src="' + this.result +'" alt="" /></span>';
+
+//             };
+
+
+//         }
+
+//     }
+
+//     $('.btn-primary').click(function(){
+//         var formdata = new FormData();
+
+//         var name = $('[name="goods_name"]').val();                       //商品名
+//         var brand_id = $('[name="brand_id"] option:selected').val();     //品牌
+//         var cate_id = $('[name="cate_id"] option:selected').val();       //所属分类
+//         var stock = $('[name="stock"]').val();                           //库存
+//         var price = $('[name="price"]').val();                           //价格
+//         var pk = $('[name="pk"]').val();                                 //pk券
+//         // console.log(name,brand_id,cate_id,stock,price,pk);return false;
+//         var id = $('[name="id"]').val();
+//         formdata.append('edit_id',id?id:'');                          //编辑的标识id
+//         formdata.append('goods_name',name);
+//         formdata.append('brand_id',brand_id);
+//         formdata.append('cate_id',cate_id);
+//         formdata.append('stock',stock);
+//         formdata.append('price',price);
+//         formdata.append('pk',pk);
+
+//         var img = $('[name="image[]"]').get(0).files;                      //图片
+//         for(var i=0; i<img.length;i++){
+//             formdata.append('img[]',img[i]);
+//         }
+
+//         $.ajax({
+//             url: "{:U('admin/goods/goods_save')}",
+//             type: 'POST',
+//             cache: false,
+//             data: formdata,
+//             processData: false,
+//             contentType: false,
+//             success:function(e){
+//                 if(e.status==1){
+//                     layer.msg(e.msg,{icon:1});
+//                     window.location.href=e.url;
+//                 }else{
+//                     layer.msg(e.msg,{icon:2});
+
+//                 }
+//             }
+//         });
+
+
+//     });
+
+
+//     //编辑时删除图片
+//     $('.del').click(function(){
+//         var id = $(this).attr('data-id');
+//         var this_img = $(this).parent('span');
+//         layer.confirm('您确定删除？', {
+//                 btn: ['确定','取消'] //按钮
+//             }, function(){
+//                 layer.closeAll();
+//                 $.post("{:U('goods/del_goods_img')}",{id:id},function(e){
+//                     if(e.status==1){
+//                         layer.msg(e.msg,{icon:1});
+//                         this_img.remove();
+//                     }else{
+//                         layer.msg(e.msg,{icon:2});
+//                     }
+//                 },'json');
+
+//             }
+//         );
+//     });
+
+
+
+
+</script>
+
+
+
+</body>
+
+</html>

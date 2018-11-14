@@ -1,0 +1,518 @@
+<?php
+namespace Portal\Controller;
+use Common\Controller\HomebaseController;
+header("Content-type: text/html; charset=utf-8"); 
+/**
+ * 
+ */
+class MemberController extends HomebaseController {
+	
+	protected $member_model;
+	protected $return_model;
+	protected $push_model;
+	protected $goodslog_model;
+	protected $order_model;
+	protected $tixian_model;
+	
+	public function _initialize() {
+		parent::_initialize();
+		$this->member_model = M("Member");
+		$this->return_model = M("ReturnLevel");
+		$this->push_model = M("Push");
+		$this->goodslog_model = M("Goodslog");
+		$this->order_model = M("Order");
+		$this->tixian_model = M("Tixian");
+	}
+	
+	//淘口令转商品链接
+	public function getTkl() {
+		//￥Yb9T04Dxor3￥
+		
+		$mid = isset($_REQUEST['mid'])?$_REQUEST['mid']:'';
+		$tkl = isset($_REQUEST['tkl'])?$_REQUEST['tkl']:'';
+		$data = array();
+		if(empty($tkl)){
+			$msg = '参数不能为空';
+			return return_result(0,1002,$msg,$data);
+		}
+
+		/*
+		 * tab:1、网站 2、APP 3、导购 4、软件
+		* gcid:0、网站 7、APP 8、导购 7、软件
+		*/
+		$url_tg = 'http://pub.alimama.com/common/adzone/adzoneManage.json?tab=2&toPage=1&perPageSize=100&gcid=7&t=1508486089958&pvid={pvid}&_tb_token_={token';
+		$tgw=$this->execcurl('http://60.205.204.36:8886/api?Key=jiandan666&utf=1&getname=json&url='.urlencode($url_tg).'&skey=jiandan666');
+		$tgwArray=$this->is_json($tgw);
+		
+		$tgwdata = array();
+		foreach($tgwArray['data']['pagelist'] as $key=>$value){
+			array_push($tgwdata,$value['adzonePid']);
+		}
+		$tgwkey = array_rand($tgwdata);
+		$pid = $tgwdata[$tgwkey];
+		
+		if(empty($mid)){
+			$returnMoney= $this->return_model->where(array('is_default'=>1))->find();
+		}else{
+			$info= $this->member_model->where(array('id'=>$mid))->find();
+			$returnMoney= $this->return_model->where(array('id'=>$info['level_id']))->find();
+		}
+		$rs=$this->execcurl('http://60.205.204.36:8886/api?Key=jiandan666&utf=1&getname=taotoken&content=￥'.$tkl.'￥&type=1&pid='.$pid);
+		$res=$this->is_json($rs);
+		$dataList = array();
+		
+		if(!empty($res['tkCommFee'])){
+			$arr['url'] = empty($res['couponLink'])?$res['clickUrl']:$res['couponLink'];
+			$arr['picurl'] = "http:".$res['pictUrl'];
+			$arr['startFee'] = $res['zkPrice'];//优惠券起用钱
+			$arr['amount'] = $res['couponAmount'];//优惠钱
+			$arr['goodsid'] = $res['auctionId'];
+			$arr['title'] = $res['auctionTitle'];
+			$commission = round(($res['zkPrice']-$res['couponAmount'])*($res['tkRate']/100),2);
+			$arr['commission'] = round($commission*($returnMoney['zigou_return']/100),2);
+			$status = 1;
+			if(!empty($mid)){
+				$goodslog = $this->goodslog_model->where(array('mid'=>$mid,'goodsid'=>$arr['goodsid'],'pid'=>$pid))->find();
+				if(empty($goodslog)){
+					$goods_data['mid'] = $mid;
+					$goods_data['goodsid'] = $arr['goodsid'];
+					$goods_data['pid'] = $pid;
+					$goods_data['addtime'] = time();
+					$this->goodslog_model->add($goods_data);
+				}
+			}
+			array_push($dataList,$arr);
+			$data_array['goodsid'] = $arr['goodsid'];
+			$data_array['data'] = $dataList;
+		}else{
+			$status = 0;
+			$arr['url'] = '';
+			$arr['picurl'] = '';
+			$arr['startFee'] = '';//优惠券起用钱
+			$arr['amount'] = '';//优惠钱
+			$arr['effectiveStartTime'] = '';//开始时间
+			$arr['effectiveEndTime'] = '';//结束时间
+			$arr['goodsid'] = '';
+			$arr['title'] = '';
+			$arr['commission'] = '';
+			array_push($dataList,$arr);
+			$data_array['goodsid'] = '';
+			$data_array['data'] = $dataList;
+		}
+		
+		$data = array(
+			'status' => $status,
+			'msg'=>'成功',
+			'datas'=>$data_array
+		);
+		echo json_encode($data);
+		exit;
+    }
+    
+    
+    function execcurl($url,$ispost=false,$data='',$in='utf8',$out='utf8',$cookie='')
+    {
+    	$fn = curl_init();
+    	curl_setopt($fn, CURLOPT_URL, $url);
+    	curl_setopt($fn, CURLOPT_TIMEOUT, 60);
+    	curl_setopt($fn, CURLOPT_RETURNTRANSFER, 1);
+    	curl_setopt($fn, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);
+    	curl_setopt($fn, CURLOPT_REFERER, $url);
+    	curl_setopt($fn, CURLOPT_HEADER, 0);
+    	if($cookie)
+    		curl_setopt($fn,CURLOPT_COOKIE,$cookie);
+    	if($ispost){
+    		curl_setopt($fn, CURLOPT_POST, TRUE);
+    		curl_setopt($fn, CURLOPT_POSTFIELDS, $data);
+    	}
+    	
+    	$fm = curl_exec($fn);
+    	curl_close($fn);
+    	if($in!=$out){
+    		$fm = Newiconv($in,$out,$fm);
+    	}
+    	return $fm;
+    }
+    
+    function saveInfo(){
+    	$returnDefault= $this->return_model->where(array('is_default'=>1))->find();
+    	$arr['openid'] = isset($_POST['openid'])?$_POST['openid']:'';
+    	$arr['taobao_sid'] = $_POST['sid'];
+    	$arr['avatar'] = $_POST['avatar'];
+    	$arr['nickname'] = $_POST['nickname'];
+    	$arr['jg_id'] = $_POST['jg_id'];
+    	$arr['create_time'] = time();
+    	$arr['phone_type'] = $_POST['phone_type'];//1、安卓 2、IOS
+    	$arr['level_id'] = $returnDefault['id'];
+	    $data = array();
+		if(empty($arr['openid'])){
+			$msg = '参数不能为空';
+			return return_result(0,1002,$msg,$data);
+		}
+		$info= $this->member_model->where(array('openid'=>$arr['openid']))->find();
+		$if_manager = $this->member_model->where('is_manager=1')->find();
+		
+		if(empty($info)){
+			include 'extend/phpqrcode.php';
+    		$id=$this->member_model->add($arr);
+    		$value = $id; //二维码内容
+	    	$errorCorrectionLevel = 'H';//容错级别
+	    	$matrixPointSize = 6;//生成图片大小
+	    	$qrpath='data/upload/qrcode/';//二维码保存路径
+	    	$qrcodename = $id;
+	    	$qrcode = new \QRcode();
+	    	$qrcode->png($value, $qrpath.$qrcodename.'.png',$errorCorrectionLevel,$matrixPointSize,2);
+	    	$qrcode_url='/data/upload/qrcode/'.$qrcodename.'.png';
+    		$rwm['qrcode'] = WEB_URL.$qrcode_url;
+    		$rwm['invite_code'] = $this->getInvite();
+    		$res = $this->member_model->where('id='.$id)->save($rwm);
+    		$data['mid'] = $id;
+    		$data['is_bind'] = 0;
+		}else{
+			if(empty($info['invite_code'])){
+				$mem['invite_code'] = $this->getInvite();
+			}
+			$mem['avatar'] = $_POST['avatar'];
+			$mem['nickname'] = $_POST['nickname'];
+			$res = $this->member_model->where('id='.$info['id'])->save($mem);
+			$data['mid'] = $info['id'];
+			$data['is_bind'] = empty($info['share_id'])?0:1;
+		}
+		$data['count'] = $this->push_model->where('mid='.$data['mid'].' and status=0')->count();
+		$data['kefuid'] = $if_manager['id'];
+		$data['kefu_nickname'] = $if_manager['nickname'];
+		$data['kefu_avatar'] = $if_manager['avatar'];
+		session('mid',$data['mid']);
+		$this->updateInfo($data['mid']);
+		return return_result(1,1000,'成功',$data);
+    }
+    
+    function is_json($string){
+    	try{
+    		$data = json_decode($string,true);
+    	}catch(Exception $e){
+    		return  $string;
+    	}
+    	return $data;
+    }
+    
+    function binding(){
+    	//$share_id = isset($_REQUEST['share_id'])?$_REQUEST['share_id']:'';
+    	$invitecode = isset($_REQUEST['invitecode'])?$_REQUEST['invitecode']:'';
+    	$mid = isset($_REQUEST['mid'])?$_REQUEST['mid']:'';
+    	if(empty($invitecode) || empty($mid)){
+    		$msg = '参数不能为空';
+    		return return_result(0,1002,$msg,array());
+    	}
+    	
+    	$info1= $this->member_model->where(array('id'=>$mid))->find();
+    	$info2= $this->member_model->where(array('invite_code'=>$invitecode))->find();
+    	if(empty($info1)){
+    		return return_result(0,1003,$msg,array());
+    	}
+    	if(empty($info2)){
+    		return return_result(0,1003,$msg,array());
+    	}
+    	if(!empty($info1['share_id'])){
+    		return return_result(0,1002,'不能重复绑定',array());
+    	}
+    	if($info2['share_id']==$mid){
+    		return return_result(0,1002,'对方已是您的粉丝',array());
+    	}
+    	if($info1['share_id']==$info2['id']){
+    		return return_result(0,1002,'对方已是您的粉丝',array());
+    	}
+    	$arr['share_id'] = $info2['id'];
+    	$arr['share_add_time'] = time();
+    	$res = $this->member_model->where('id='.$mid)->save($arr);
+    	return return_result(1,1000,'成功',array());
+    }
+   
+    function getInfo(){
+    	$mid = isset($_POST['mid'])?$_POST['mid']:'';
+    	$data = array();
+    	if(empty($mid)){
+    		$msg = '参数不能为空';
+    		return return_result(0,1002,$msg,$data);
+    	}
+    	$info= $this->member_model->where(array('id'=>$mid))->find();
+    	if(!empty($info)){
+    		$data['avatar'] = $info['avatar'];//头像
+	    	$data['cash_total'] = $info['cash_total'];//总提现
+	    	$data['use_money'] = $info['use_money'];//账户余额
+	    	$data['total_return'] = $info['total_return'];//总返现
+	    	//$data['qrcode'] = $info['qrcode'];//二维码
+	    	$data['qrcode'] = "http://jiandan.liexianghudong.com/public/img/qrcode.png";
+	    	$data['iscash'] = empty($info['pwd'])?0:1;//是否设置提现密码
+	    	$data['account'] = $info['account'];//提现账户
+	    	$data['realname'] = $info['realname'];//真实姓名
+	    	$data['pwd'] = $info['pwd'];//提现密码
+	    	$data['invite_code'] = $info['invite_code'];//邀请码
+	    	return return_result(1,1000,'成功',$data);
+    	}else{
+    		$msg = '该用户不存在';
+    		return return_result(0,1003,$msg,$data);
+    	}
+    }
+    
+    function setCash(){
+    	
+    	$mid = isset($_POST['mid'])?$_POST['mid']:'';
+    	$type = isset($_POST['type'])?$_POST['type']:'';//1、设置密码 2、修改密码 3、修改支付宝帐号和密码
+    	$account = isset($_POST['account'])?$_POST['account']:'';
+    	$realname = isset($_POST['realname'])?$_POST['realname']:'';
+    	$password = isset($_POST['pwd'])?$_POST['pwd']:'';
+    	$oldpassword = isset($_POST['oldpwd'])?$_POST['oldpwd']:'';
+    	$sign = isset($_POST['sign'])?$_POST['sign']:'';
+    	
+    	$data = array();
+    	if(empty($type) || empty($account) || empty($realname) || empty($password) || empty($sign)){   
+    		$msg = '参数不能为空';
+    		return return_result(0,1002,$msg,$data);
+    	}
+    	$item['mid'] = $mid;
+    	$item['type'] = $type;
+    	$item['account'] = $account;
+    	$item['realname'] = $realname;
+    	$item['pwd'] = $password;
+    	$item['oldpwd'] = $oldpassword;
+    	$item['sign'] = $sign;
+    	$flag = check_sign($item);
+    	if(!$flag){
+    		return return_result(0,1014,'签名错误',$data);
+    	}
+    	$info= $this->member_model->where(array('id'=>$mid))->find();
+    	if(!empty($info)){
+	    	if($type==1){
+	    		$arr['pwd'] = $password;
+	    		$arr['account'] = $account;
+	    		$arr['realname'] = $realname;
+	    		$res = $this->member_model->where('id='.$mid)->save($arr);
+	    		return return_result(1,1000,'成功',$data);
+	    	}else if($type==2){
+	    		if($oldpassword==$info['pwd']){
+	    			$arr['pwd'] = $password;
+	    			$arr['account'] = $account;
+	    			$arr['realname'] = $realname;
+	    			$res = $this->member_model->where('id='.$mid)->save($arr);
+	    			return return_result(1,1000,'成功',$data);
+	    		}else{
+	    			$msg = '密码错误';
+	    			return return_result(0,1004,$msg,$data);
+	    		}
+	    	}else if($type==3){
+	    		if($password==$info['pwd']){
+	    			$arr['account'] = $account;
+	    			$arr['realname'] = $realname;
+	    			$res = $this->member_model->where('id='.$mid)->save($arr);
+	    			return return_result(1,1000,'成功',$data);
+	    		}else{
+	    			$msg = '密码错误';
+	    			return return_result(0,1004,$msg,$data);
+	    		}
+	    	}
+    	}else{
+    		$msg = '该用户不存在';
+    		return return_result(0,1003,$msg,$data);
+    	}
+    	
+    }
+    
+    function getOrder(){
+    	$start_date = date("Y-m-d",strtotime("-5 day"));
+    	$end_date = date("Y-m-d");
+    	//$start_date = '2017-10-16';
+    	//$end_date = '2017-10-16';
+    	$tgwArray = $this->getTgw();
+    	$rs=$this->execcurl('http://60.205.204.36:8886/api?Key=jiandan666&utf=1&getname=dingdan&type=0&id=&status=&start='.$start_date.'&end='.$end_date);
+    	$res=$this->is_json($rs);
+    	
+    	if(isset($res['dingdan'][1])){
+    		$count = count($res['dingdan']);
+    		foreach($res['dingdan'] as $key=>$value){
+    			if($key>0){
+    				//if(in_array($value['F27'].'_'.$value['F29'], $tgwArray)){
+    				$info= $this->order_model->where(array('order_sn'=>$value['F25'],'goods_id'=>$value['F4']))->find();
+    				
+	    			if(empty($info)){
+	    				
+		    			$data['order_sn'] = $value['F25'];//订单编号
+		    			$checkOrder = substr($data['order_sn'], -6);
+		    
+		    			$map['checkorder']  = array('eq',$checkOrder);
+		    			$membercheck = $this->member_model->where($map)->find();
+		    			if(empty($membercheck)){
+		    				$membercheck = array();
+		    			}
+		    			
+		    			if($value['F9']=='订单付款'){
+		    				$status = 1;
+		    			}else if($value['F9']=='订单失效'){
+		    				$status = 2;
+		    			}else if($value['F9']=='订单结算'){
+		    				$status = 3;
+		    			}else{
+		    				$status = 4;
+		    			}
+		    			$data['status'] = $status;//订单状态
+		    			$data['price'] = $value['F13'];//订单金额
+		    			$data['goods_title'] = $value['F3'];//商品信息
+		    			$data['goods_id'] = $value['F4'];//商品ID
+		    			$data['num'] = $value['F7'];//商品数量
+		    			$data['marketprice'] = $value['F8'];//商品单价
+		    			if($value['F22']=='天猫'){
+		    				$order_type = 2;
+		    			}else{
+		    				$order_type = 1;
+		    			}
+		    			$data['order_type'] = $order_type;//订单类型
+		    			$data['add_time'] = empty($value['F1'])?'':strtotime($value['F1']);//创建时间
+		    			$data['finish_time'] = empty($value['F17'])?'':strtotime($value['F17']);//结算时间
+		    			$data['commission'] = $value['F19']=='0.00'?$value['F14']:$value['F19'];
+		    			
+		    			/*
+		    			$bilv = trim(str_replace('%', '', $value['F11']));
+		    			$cmoney =  round($value['F13']*$bilv,2);
+		    			$data['commission'] = $cmoney;
+		    			*/
+		    			$data['from_meiti'] = $value['F27'];
+		    			$data['ad_id'] = $value['F29'];
+		    			
+		    			if(empty($membercheck)){
+		    				$pid = 'mm_25721409_'.$data['from_meiti'].'_'.$data['ad_id'];
+		    				$goodslog = $this->goodslog_model->where(array('goodsid'=>$value['F4'],'pid'=>$pid))->find();
+		    				
+		    				if(!empty($goodslog)){
+		    					$data['mid'] = $goodslog['mid'];
+		    				}else{
+		    					$data['mid'] = '';
+		    				}
+		    				if(!empty($data['mid'])){
+		    					$this->member_model->where("id=".$data['mid'])->save(array('checkorder'=>$checkOrder));
+		    				}
+		    			}else{
+		    				$data['mid'] = $membercheck['id'];
+		    			}
+		    			
+		    			//print_r($data);
+		    			if(empty($data['commission'])){
+		    				$data['commission'] = 0;
+		    			}
+		    			$id = $this->order_model->add($data);
+		    			
+	    			}else{
+	    				
+	    				if($value['F9']=='订单付款'){
+	    					$status = 1;
+	    				}else if($value['F9']=='订单失效'){
+	    					$status = 2;
+	    				}else if($value['F9']=='订单结算'){
+	    					$status = 3;
+	    				}else{
+	    					$status = 4;
+	    				}
+	    				if($info['status'] != $status){
+	    					if($status==3){
+	    						$odata['finish_time'] = strtotime($value['F17']);
+	    					}
+	    					$odata['status'] = $status;
+	    					$this->order_model->where("id=".$info['id'])->save($odata);
+	    				}
+	    				
+	    			}
+	    			
+    			//}
+    		  }
+    		}
+    	}
+    	
+    	$memberList = $this->member_model->select();
+    	foreach($memberList as $key=>$value){
+    		$this->updateInfo($value['id']);
+    	}
+    	echo "<script>window.open('','_self','');window.close();</script>";
+		exit();
+    }
+    
+    function updateInfo($mid){
+    	//更新用户订单等信息
+    	$info= $this->member_model->where(array('id'=>$mid))->find();
+    	$returnMoney= $this->return_model->where(array('id'=>$info['level_id']))->find();
+    	
+    	//判断是否有粉丝
+    	$fansCount = $this->member_model->where(array('share_id'=>$mid))->count();
+    	
+    	if(empty($fansCount)){
+    		$orderList = $this->order_model->where(array('mid'=>$mid,'tixian_status1'=>0))->select();
+    		foreach($orderList as $key=>$value){
+    			$data['zigou_return'] = round($value['commission']*($returnMoney['zigou_return']/100),2);//自购返现
+    			$this->order_model->where("id=".$value['id'])->save($data);
+    		}
+    		
+    	}else{
+    		$fansList = $this->member_model->where(array('share_id'=>$mid))->select();
+    		
+    		$orderList = $this->order_model->where(array('mid'=>$mid,'tixian_status1'=>0))->select();
+    		$countMoney = 0;
+    		//有粉丝自己购物返现
+    		foreach($orderList as $key=>$value){
+    			$data['zigou_return'] = round($value['commission']*($returnMoney['zigou_return']/100),2);//自购返现
+    			$this->order_model->where("id=".$value['id'])->save($data);
+    		}
+    		
+    		//有粉丝 粉丝给自己的返现
+    		foreach ($fansList as $key=>$value){
+    			$fansOrderList = $this->order_model->where(array('mid'=>$value['id'],'tixian_status2'=>0))->select();
+    			foreach($fansOrderList as $k=>$v){
+    				$data['daili_return'] = round($v['commission']*($returnMoney['daili_return']/100),2);//代理返现
+    				$this->order_model->where("id=".$v['id'])->save($data);
+    				
+    			}
+    		}
+    	}
+    	return true;
+    }
+    
+    function getTgw(){
+    	/*
+    	 * tab:1、网站 2、APP 3、导购 4、软件
+    	* gcid:0、网站 7、APP 8、导购 7、软件
+    	*/
+    	$url = 'http://pub.alimama.com/common/adzone/adzoneManage.json?tab=1&toPage=1&perPageSize=40&gcid=0&t=1508486089958&pvid={pvid}&_tb_token_={token';
+    	$rs=$this->execcurl('http://60.205.204.36:8886/api?Key=jiandan666&utf=1&getname=json&url='.urlencode($url).'&skey=jiandan666');
+    	$res=$this->is_json($rs);
+    	$data = array();
+    	foreach($res['data']['pagelist'] as $key=>$value){
+    		array_push($data,$value['siteid'].'_'.$value['adzoneid']);
+    	}
+    	return $data;
+    }
+    
+    function qrcode(){
+    	$this->display(":invite");
+    }
+    
+    function getInvite(){
+    	$num = rand(1000,9999);
+    	$count = $this->member_model->where('invite_code='.$num)->count();
+    	if($count>0){
+    		$this->getInvite();
+    		return $num;
+    	}
+    	return $num;
+    }
+    
+    function test(){
+    	$url_tg = 'http://pub.alimama.com/common/adzone/adzoneManage.json?tab=2&toPage=1&perPageSize=100&gcid=7&t=1508486089958&pvid={pvid}&_tb_token_={token}';
+    	$tgw=$this->execcurl('http://60.205.204.36:8886/api?Key=jiandan666&utf=1&getname=json&url='.urlencode($url_tg).'&skey=jiandan666');
+    	$tgwArray=$this->is_json($tgw);
+    	$tgwdata = array();
+    	foreach($tgwArray['data']['pagelist'] as $key=>$value){
+    		array_push($tgwdata,$value['adzonePid']);
+    	}
+    	print_r($tgwdata);
+    }
+    
+} 
+
+

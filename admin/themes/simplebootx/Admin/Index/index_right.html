@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html>
+<style>
+    .pager span {
+        background: #8FC41F;
+        color: #fff;
+        border: 1px solid #8FC41F;
+        padding: 3px 10px;
+        margin-left: 8px;
+    }
+    .pager a {
+        border: 1px solid #666666;
+        padding: 3px 10px;
+        margin-left: 8px;
+        text-decoration: none;
+        color: #333;
+        outline: none;
+    }
+</style>
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <title> - 数据表格</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <link rel="shortcut icon" href="favicon.ico"> 
+    <link href="__PUBLIC__/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="__PUBLIC__/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="__PUBLIC__/css/plugins/dataTables/dataTables.bootstrap.css" rel="stylesheet">
+
+    <link href="__PUBLIC__/css/animate.css" rel="stylesheet">
+    <link href="__PUBLIC__/css/style.css?v=4.1.0" rel="stylesheet">
+
+</head>
+
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+    
+    <div class="row">
+    <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>数据概况</h5>
+                        
+                    </div>
+                    <div class="ibox-content">
+                        <p><button type="button" class="btn btn-outline btn-danger" id="member_title">今日</button>&nbsp;&nbsp;&nbsp;&nbsp;
+                        	新增用户：<strong id="add_member">{$todayMemberCount}</strong> 人     平台总用户:<strong id="count_member">{$memberCount}</strong> 人                                  
+                        	<a class="btn btn-default btn-rounded" href="#" onclick="getData(1,1)">今天</a>
+                        	<a class="btn btn-success btn-rounded" href="#" onclick="getData(1,2)">昨天</a>
+                        	<a class="btn btn-info btn-rounded" href="#" onclick="getData(1,3)">30天</a>
+                        	<a class="btn btn-warning btn-rounded" href="#" onclick="getData(1,4)">60天</a>
+                            <input placeholder="开始日期" class="layer-date" id="start_1">
+                            <input placeholder="结束日期" class="layer-date" id="end_1">
+                            <button type="button" class="btn btn-outline btn-info" onclick="getData(1,5)">查询</button>
+                        </p>
+						
+                        <p>
+                        	<button type="button" class="btn btn-outline btn-warning" id="ptfanxian_title">今日</button>&nbsp;&nbsp;&nbsp;&nbsp;
+                        	总自购返现：  <strong id="zigou_money">{$count_ziygou}</strong> 元   总平台收益：  <strong id="returnCount">{$ptsy}</strong> 元
+							<a class="btn btn-default btn-rounded" href="#" onclick="getData(2,1)">今天</a>
+                        	<a class="btn btn-success btn-rounded" href="#" onclick="getData(2,2)">昨天</a>
+                        	<a class="btn btn-info btn-rounded" href="#" onclick="getData(2,3)">30天</a>
+                        	<a class="btn btn-warning btn-rounded" href="#" onclick="getData(2,4)">60天</a>
+                            <input placeholder="开始日期" class="layer-date" id="start_2">
+                            <input placeholder="结束日期" class="layer-date" id="end_2">
+                            <button type="button" class="btn btn-outline btn-info" onclick="getData(2,5)">查询</button>
+                        </p>
+                        <php>
+                        	if($time==1 || $time==0){
+                        </php>
+                        <p>
+                           	<button type="button" class="btn btn-outline btn-primary" id="order_title">今日</button>&nbsp;&nbsp;&nbsp;&nbsp;
+                           	<a href="{:U('admin/index/index_right',array('status'=>0,'time'=>1))}" id="xiadan">下单：<strong id="xia_order">{$todayOrderCount}</strong> 单 </a>&nbsp;&nbsp;&nbsp;&nbsp;    
+                           	<a href="{:U('admin/index/index_right',array('status'=>1,'time'=>1))}" id="fukuan">付款：  <strong id="pay_order">{$payorderCount}</strong> 单</a>&nbsp;&nbsp;&nbsp;&nbsp;   
+                           	<a href="{:U('admin/index/index_right',array('status'=>2,'time'=>1))}" id="shixiao">失效：  <strong id="invalid_order">{$invalidCount}</strong> 单</a>  &nbsp;&nbsp;&nbsp;&nbsp;
+                           	<a href="{:U('admin/index/index_right',array('status'=>3,'time'=>1))}" id="jiesuan">结算：  <strong id="finish_order">{$finishCount}</strong> 单</a>&nbsp;&nbsp;&nbsp;&nbsp;
+							<a class="btn btn-default btn-rounded" href="#" onclick="getData(3,1)">今天</a>
+                        	<a class="btn btn-success btn-rounded" href="#" onclick="getData(3,2)">昨天</a>
+                        	<a class="btn btn-info btn-rounded" href="#" onclick="getData(3,3)">30天</a>
+                        	<a class="btn btn-warning btn-rounded" href="#" onclick="getData(3,4)">60天</a>
+                            <input placeholder="开始日期" class="layer-date" id="start_3" value="{$start_time}">
+                            <input placeholder="结束日期" class="layer-date" id="end_3" value="{$end_time}">
+                            <button type="button" class="btn btn-outline btn-info" onclick="getData(3,5)">查询</button>
+                        </p>
+                        <php>
+                        	}else if($time==2){
+                        </php>
+                        	<button type="button" class="btn btn-outline btn-primary" id="order_title">昨天</button>&nbsp;&nbsp;&nbsp;&nbsp;
+                           	<a href="{:U('admin/index/index_right',array('status'=>0,'time'=>2))}" id="xiadan">下单：<strong id="xia_order">{$todayOrderCount}</strong> 单 </a>&nbsp;&nbsp;&nbsp;&nbsp;    
+                           	<a href="{:U('admin/index/index_right',array('status'=>1,'time'=>2))}" id="fukuan">付款：  <strong id="pay_order">{$payorderCount}</strong> 单</a>&nbsp;&nbsp;&nbsp;&nbsp;   
+                           	<a href="{:U('admin/index/index_right',array('status'=>2,'time'=>2))}" id="shixiao">失效：  <strong id="invalid_order">{$invalidCount}</strong> 单</a>  &nbsp;&nbsp;&nbsp;&nbsp;
+                           	<a href="{:U('admin/index/index_right',array('status'=>3,'time'=>2))}" id="jiesuan">结算：  <strong id="finish_order">{$finishCount}</strong> 单</a>&nbsp;&nbsp;&nbsp;&nbsp;
+							<a class="btn btn-default btn-rounded" href="#" onclick="getData(3,1)">今天</a>
+                        	<a class="btn btn-success btn-rounded" href="#" onclick="getData(3,2)">昨天</a>
+                        	<a class="btn btn-info btn-rounded" href="#" onclick="getData(3,3)">30天</a>
+                        	<a class="btn btn-warning btn-rounded" href="#" onclick="getData(3,4)">60天</a>
+                            <input placeholder="开始日期" class="layer-date" id="start_3" value="{$start_time}">
+                            <input placeholder="结束日期" class="layer-date" id="end_3" value="{$end_time}">
+                            <button type="button" class="btn btn-outline btn-info" onclick="getData(3,5)">查询</button>
+                        <php>
+                        	}else if($time==3){
+                        </php>
+                        	<button type="button" class="btn btn-outline btn-primary" id="order_title">30天</button>&nbsp;&nbsp;&nbsp;&nbsp;
+                           	<a href="{:U('admin/index/index_right',array('status'=>0,'time'=>3))}" id="xiadan">下单：<strong id="xia_order">{$todayOrderCount}</strong> 单 </a>&nbsp;&nbsp;&nbsp;&nbsp;    
+                           	<a href="{:U('admin/index/index_right',array('status'=>1,'time'=>3))}" id="fukuan">付款：  <strong id="pay_order">{$payorderCount}</strong> 单</a>&nbsp;&nbsp;&nbsp;&nbsp;   
+                           	<a href="{:U('admin/index/index_right',array('status'=>2,'time'=>3))}" id="shixiao">失效：  <strong id="invalid_order">{$invalidCount}</strong> 单</a>  &nbsp;&nbsp;&nbsp;&nbsp;
+                           	<a href="{:U('admin/index/index_right',array('status'=>3,'time'=>3))}" id="jiesuan">结算：  <strong id="finish_order">{$finishCount}</strong> 单</a>&nbsp;&nbsp;&nbsp;&nbsp;
+							<a class="btn btn-default btn-rounded" href="#" onclick="getData(3,1)">今天</a>
+                        	<a class="btn btn-success btn-rounded" href="#" onclick="getData(3,2)">昨天</a>
+                        	<a class="btn btn-info btn-rounded" href="#" onclick="getData(3,3)">30天</a>
+                        	<a class="btn btn-warning btn-rounded" href="#" onclick="getData(3,4)">60天</a>
+                            <input placeholder="开始日期" class="layer-date" id="start_3" value="{$start_time}">
+                            <input placeholder="结束日期" class="layer-date" id="end_3" value="{$end_time}">
+                            <button type="button" class="btn btn-outline btn-info" onclick="getData(3,5)">查询</button>
+                        <php>
+                        	}else if($time==4){
+                        </php>
+                        	<button type="button" class="btn btn-outline btn-primary" id="order_title">60天</button>&nbsp;&nbsp;&nbsp;&nbsp;
+                           	<a href="{:U('admin/index/index_right',array('status'=>0,'time'=>4))}" id="xiadan">下单：<strong id="xia_order">{$todayOrderCount}</strong> 单 </a>&nbsp;&nbsp;&nbsp;&nbsp;    
+                           	<a href="{:U('admin/index/index_right',array('status'=>1,'time'=>4))}" id="fukuan">付款：  <strong id="pay_order">{$payorderCount}</strong> 单</a>&nbsp;&nbsp;&nbsp;&nbsp;   
+                           	<a href="{:U('admin/index/index_right',array('status'=>2,'time'=>4))}" id="shixiao">失效：  <strong id="invalid_order">{$invalidCount}</strong> 单</a>  &nbsp;&nbsp;&nbsp;&nbsp;
+                           	<a href="{:U('admin/index/index_right',array('status'=>3,'time'=>4))}" id="jiesuan">结算：  <strong id="finish_order">{$finishCount}</strong> 单</a>&nbsp;&nbsp;&nbsp;&nbsp;
+							<a class="btn btn-default btn-rounded" href="#" onclick="getData(3,1)">今天</a>
+                        	<a class="btn btn-success btn-rounded" href="#" onclick="getData(3,2)">昨天</a>
+                        	<a class="btn btn-info btn-rounded" href="#" onclick="getData(3,3)">30天</a>
+                        	<a class="btn btn-warning btn-rounded" href="#" onclick="getData(3,4)">60天</a>
+                            <input placeholder="开始日期" class="layer-date" id="start_3" value="{$start_time}">
+                            <input placeholder="结束日期" class="layer-date" id="end_3" value="{$end_time}">
+                            <button type="button" class="btn btn-outline btn-info" onclick="getData(3,5)">查询</button>
+                        <php>
+                        	}else if($time==5){
+                        </php>
+                        	<button type="button" class="btn btn-outline btn-primary" id="order_title">时间段</button>&nbsp;&nbsp;&nbsp;&nbsp;
+                           	<a href="{:U('admin/index/index_right',array('status'=>0,'time'=>5))}" id="xiadan">下单：<strong id="xia_order">{$todayOrderCount}</strong> 单 </a>&nbsp;&nbsp;&nbsp;&nbsp;    
+                           	<a href="{:U('admin/index/index_right',array('status'=>1,'time'=>5))}" id="fukuan">付款：  <strong id="pay_order">{$payorderCount}</strong> 单</a>&nbsp;&nbsp;&nbsp;&nbsp;   
+                           	<a href="{:U('admin/index/index_right',array('status'=>2,'time'=>5))}" id="shixiao">失效：  <strong id="invalid_order">{$invalidCount}</strong> 单</a>  &nbsp;&nbsp;&nbsp;&nbsp;
+                           	<a href="{:U('admin/index/index_right',array('status'=>3,'time'=>5))}" id="jiesuan">结算：  <strong id="finish_order">{$finishCount}</strong> 单</a>&nbsp;&nbsp;&nbsp;&nbsp;
+							<a class="btn btn-default btn-rounded" href="#" onclick="getData(3,1)">今天</a>
+                        	<a class="btn btn-success btn-rounded" href="#" onclick="getData(3,2)">昨天</a>
+                        	<a class="btn btn-info btn-rounded" href="#" onclick="getData(3,3)">30天</a>
+                        	<a class="btn btn-warning btn-rounded" href="#" onclick="getData(3,4)">60天</a>
+                            <input placeholder="开始日期" class="layer-date" id="start_3" value="{$start_time}">
+                            <input placeholder="结束日期" class="layer-date" id="end_3" value="{$end_time}">
+                            <button type="button" class="btn btn-outline btn-info" onclick="getData(3,5)">查询</button>
+                        <php>
+                        	}
+                        </php>
+                        <p>
+                           	 <button type="button" class="btn btn-outline btn-success" id="fanxian_title">今日</button>&nbsp;&nbsp;&nbsp;&nbsp;
+                           	 代理返现：  <strong id="fanxian_money">{$dailifanxian}</strong> 元   总返现：  <strong id="sumreturn">{$fanxianCount}</strong> 元
+							<a class="btn btn-default btn-rounded" href="#" onclick="getData(4,1)">今天</a>
+                        	<a class="btn btn-success btn-rounded" href="#" onclick="getData(4,2)">昨天</a>
+                        	<a class="btn btn-info btn-rounded" href="#" onclick="getData(4,3)">30天</a>
+                        	<a class="btn btn-warning btn-rounded" href="#" onclick="getData(4,4)">60天</a>
+                            <input placeholder="开始日期" class="layer-date" id="start_4">
+                            <input placeholder="结束日期" class="layer-date" id="end_4">
+                            <button type="button" class="btn btn-outline btn-info" onclick="getData(4,5)">查询</button>
+                        </p>
+                        
+                        <p>
+                           	<button type="button" class="btn btn-outline btn-warning" id="tixian_title">今日</button>&nbsp;&nbsp;&nbsp;&nbsp;
+                           	提现：<strong id="tixian_money">{$tixian}</strong> 元     总提现：  <strong>{$tixianCount}</strong> 元   
+							<a class="btn btn-default btn-rounded" href="#" onclick="getData(5,1)">今天</a>
+                        	<a class="btn btn-success btn-rounded" href="#" onclick="getData(5,2)">昨天</a>
+                        	<a class="btn btn-info btn-rounded" href="#" onclick="getData(5,3)">30天</a>
+                        	<a class="btn btn-warning btn-rounded" href="#" onclick="getData(5,4)">60天</a>
+                            <input placeholder="开始日期" class="layer-date" id="start_5">
+                            <input placeholder="结束日期" class="layer-date" id="end_5">
+                            <button type="button" class="btn btn-outline btn-info" onclick="getData(5,5)">查询</button>
+                        </p>
+                        
+                    </div>
+                </div>
+            </div>
+    	</div>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>用户信息 <small>订单，返现</small></h5>
+                         <a  class="collapse-link " data-action="{:U('index/index_right')}" style="float: right;">
+                        <input  type="text" name="search" value='' placeholder="请输入昵称"/>
+                        <button type="button" class="search_href">搜索</button>
+                    </a>
+                    </div>
+                    <div class="ibox-content">
+
+                        <table class="table table-striped table-bordered table-hover dataTables-example">
+                            <thead>
+                                <tr>
+                                	<th>订单编号</th>
+                                    <th>用户名</th>
+                                    <th>上线</th>
+                                    <th>下单时间</th>
+                                    <th>订单信息</th>
+                                    <th>订单状态</th>
+                                    <th>自购返现</th>
+                                    <th>代理返现</th>
+                                    <th>订单来源</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            	<foreach name="list" item="vo">
+                                <tr class="gradeX">
+                                	<td>{$vo.order_sn}</td>
+                                    <td>{$vo.nickname}</td>
+                                    <td>
+                                    	<php>
+                                    		$sharearr= M("Member")->where('id='.$vo['mid'])->find();
+	                                   		$share= M("Member")->where('id='.$sharearr['share_id'])->find();
+	                                   		echo empty($share['nickname'])?'无':$share['nickname'];
+	                                   	</php>
+                                    </td>
+                                    <td>
+                                    	<php>
+                                    		echo date("Y-m-d H:i:s",$vo['add_time']);
+                                    	</php>
+                                    </td>
+                                    <td>商品：{$vo.goods_title}<br>
+                                    	数量：{$vo.num}  单价：{$vo.marketprice} 总价：{$vo.price}
+                                    </td>
+                                    <td>
+                                    	<php>
+                                    		if($vo['status']==1){
+                                    	</php>
+                                    		<span class="label label-info">订单付款</span>
+                                    	<php>
+                                    		}else if($vo['status']==2){
+                                    	</php>
+                                    		<span class="label label-danger">订单失效</span>
+                                    	<php>
+                                    		}else if($vo['status']==3){
+                                    	</php>
+                                    		<span class="label label-success">订单结算</span>
+                                    	<php>
+                                    		}
+                                    	</php>
+                                    </td>
+                                   
+                                    <td>{$vo.zigou_return}</td>
+                                    <td>{$vo.daili_return}</td>
+                                   
+                                    <td>
+                                    	<php>echo $vo['order_type']==1?'淘宝':'天猫'</php>
+                                    
+                                    </td>
+                                    
+                                </tr>
+                                </foreach>
+                                
+                            </tbody>
+                            
+                        </table>
+                         <ul class="paginList pager"><!-- 分页显示 -->{$page}</ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 全局js -->
+    <script src="__PUBLIC__/js/jquery.min.js?v=2.1.4"></script>
+    <script src="__PUBLIC__/js/bootstrap.min.js?v=3.3.6"></script>
+
+
+
+    <script src="__PUBLIC__/js/plugins/jeditable/jquery.jeditable.js"></script>
+
+    <!-- Data Tables -->
+    <script src="__PUBLIC__/js/plugins/dataTables/jquery.dataTables.js"></script>
+    <script src="__PUBLIC__/js/plugins/dataTables/dataTables.bootstrap.js"></script>
+
+    <!-- 自定义js -->
+    <script src="__PUBLIC__/js/content.js?v=1.0.0"></script>
+ 	<script src="__PUBLIC__/js/plugins/layer/laydate/laydate.js"></script>
+
+    <!-- Page-Level Scripts -->
+    <script>
+        //点击搜索
+        $(".search_href").on('click',function(){
+            var url = $('.collapse-link').attr('data-action');
+            var search=  $("input[name='search']").val();
+            var   action= url+'&search='+search;
+            location.href=action;
+            return false;
+        });
+//        $(document).ready(function () {
+//            $('.dataTables-example').dataTable();
+//
+//            /* Init DataTables */
+//            var oTable = $('#editable').dataTable();
+//
+//            /* Apply the jEditable handlers to the table */
+//            oTable.$('td').editable('../example_ajax.php', {
+//                "callback": function (sValue, y) {
+//                    var aPos = oTable.fnGetPosition(this);
+//                    oTable.fnUpdate(sValue, aPos[0], aPos[1]);
+//                },
+//                "submitdata": function (value, settings) {
+//                    return {
+//                        "row_id": this.parentNode.getAttribute('id'),
+//                        "column": oTable.fnGetPosition(this)[2]
+//                    };
+//                },
+//
+//                "width": "90%",
+//                "height": "100%"
+//            });
+//
+//
+//        });
+
+        function fnClickAddRow() {
+            $('#editable').dataTable().fnAddData([
+                "Custom row",
+                "New row",
+                "New row",
+                "New row",
+                "New row",
+                "New row",
+                "New row",
+                "New row",
+                "New row",
+                "New row",
+                "New row",
+                "New row"]);
+
+        }
+        
+
+        //日期范围限制
+        var start1 = {
+            elem: '#start_1',
+            format: 'YYYY-MM-DD hh:mm:ss',
+            min: '1900-01-01 0:0:0', //设定最小日期为当前日期
+            max: '2099-01-01 23:59:59', //最大日期
+            istime: true,
+            istoday: false,
+            choose: function (datas) {
+                end.min = datas; //开始日选好后，重置结束日的最小日期
+                end.start = datas //将结束日的初始值设定为开始日
+            }
+        };
+        var end1 = {
+            elem: '#end_1',
+            format: 'YYYY-MM-DD hh:mm:ss',
+            min: '1900-01-01 0:0:0',
+            max: '2099-06-16 23:59:59',
+            istime: true,
+            istoday: false,
+            choose: function (datas) {
+                start.max = datas; //结束日选好后，重置开始日的最大日期
+            }
+        };
+        laydate(start1);
+        laydate(end1);
+        
+      //日期范围限制
+      
+        var start2 = {
+            elem: '#start_2',
+            format: 'YYYY-MM-DD hh:mm:ss',
+            min: '1900-01-01 0:0:0', //设定最小日期为当前日期
+            max: '2099-01-01 23:59:59', //最大日期
+            istime: true,
+            istoday: false,
+            choose: function (datas) {
+                end.min = datas; //开始日选好后，重置结束日的最小日期
+                end.start = datas //将结束日的初始值设定为开始日
+            }
+        };
+        var end2 = {
+            elem: '#end_2',
+            format: 'YYYY-MM-DD hh:mm:ss',
+            min: '1900-01-01 0:0:0',
+            max: '2099-06-16 23:59:59',
+            istime: true,
+            istoday: false,
+            choose: function (datas) {
+                start.max = datas; //结束日选好后，重置开始日的最大日期
+            }
+        };
+        laydate(start2);
+        laydate(end2);
+        
+        var start3 = {
+                elem: '#start_3',
+                format: 'YYYY-MM-DD hh:mm:ss',
+                min: '1900-01-01 0:0:0', //设定最小日期为当前日期
+                max: '2099-01-01 23:59:59', //最大日期
+                istime: true,
+                istoday: false,
+                choose: function (datas) {
+                    end.min = datas; //开始日选好后，重置结束日的最小日期
+                    end.start = datas //将结束日的初始值设定为开始日
+                }
+            };
+            var end3 = {
+                elem: '#end_3',
+                format: 'YYYY-MM-DD hh:mm:ss',
+                min: '1900-01-01 0:0:0',
+                max: '2099-06-16 23:59:59',
+                istime: true,
+                istoday: false,
+                choose: function (datas) {
+                    start.max = datas; //结束日选好后，重置开始日的最大日期
+                }
+            };
+            laydate(start3);
+            laydate(end3);
+            
+            
+            var start4 = {
+                    elem: '#start_4',
+                    format: 'YYYY-MM-DD hh:mm:ss',
+                    min: '1900-01-01 0:0:0', //设定最小日期为当前日期
+                    max: '2099-01-01 23:59:59', //最大日期
+                    istime: true,
+                    istoday: false,
+                    choose: function (datas) {
+                        end.min = datas; //开始日选好后，重置结束日的最小日期
+                        end.start = datas //将结束日的初始值设定为开始日
+                    }
+                };
+                var end4 = {
+                    elem: '#end_4',
+                    format: 'YYYY-MM-DD hh:mm:ss',
+                    min: '1900-01-01 0:0:0',
+                    max: '2099-06-16 23:59:59',
+                    istime: true,
+                    istoday: false,
+                    choose: function (datas) {
+                        start.max = datas; //结束日选好后，重置开始日的最大日期
+                    }
+                };
+                laydate(start4);
+                laydate(end4);
+                
+           var start5 = {
+                   elem: '#start_5',
+                   format: 'YYYY-MM-DD hh:mm:ss',
+                   min: '1900-01-01 0:0:0', //设定最小日期为当前日期
+                   max: '2099-01-01 23:59:59', //最大日期
+                   istime: true,
+                   istoday: false,
+                   choose: function (datas) {
+                       end.min = datas; //开始日选好后，重置结束日的最小日期
+                       end.start = datas //将结束日的初始值设定为开始日
+                   }
+               };
+               var end5 = {
+                   elem: '#end_5',
+                   format: 'YYYY-MM-DD hh:mm:ss',
+                   min: '1900-01-01 0:0:0',
+                   max: '2099-06-16 23:59:59',
+                   istime: true,
+                   istoday: false,
+                   choose: function (datas) {
+                       start.max = datas; //结束日选好后，重置开始日的最大日期
+                   }
+               };
+               laydate(start5);
+               laydate(end5);
+    </script>
+	<script>
+		function getData(type,val){
+			if(type==3){
+				$('#xiadan').attr('href','/index.php?g=admin&m=index&a=index_right&status=0&time='+val);
+				$('#fukuan').attr('href','/index.php?g=admin&m=index&a=index_right&status=1&time='+val);
+				$('#shixiao').attr('href','/index.php?g=admin&m=index&a=index_right&status=2&time='+val);
+				$('#jiesuan').attr('href','/index.php?g=admin&m=index&a=index_right&status=3&time='+val);
+			}
+			var start = $("#start_"+type).val();
+			var end = $("#end_"+type).val();
+			var title;
+			switch(val)
+			{
+			case 1:
+			  title = '今日'; 
+			  break;
+			case 2:
+			  title = '昨天';
+			  break;
+			case 3:
+			  title = '30天';
+			  break;
+			case 4:
+			  title = '60天';
+			  break;
+			case 5:
+			  title = '时间段';
+			  break;
+			default:
+			  title = '时间段';
+			}
+			
+			$.post("{:U('index/getData')}",{type:type,val:val,start:start,end:end},
+	   				function(data){
+						
+						if(type==1){
+	    					$("#add_member").text(data.count);
+	    					$("#member_title").text(title);
+						}else if(type==2){
+							$("#zigou_money").text(data.count_ziygou);
+							$("#returnCount").text(data.ptsy);
+							$("#ptfanxian_title").text(title);
+						}else if(type==3){
+							$("#xia_order").text(data.todayOrderCount);
+							$("#pay_order").text(data.payorderCount);
+							$("#invalid_order").text(data.invalidCount);
+							$("#finish_order").text(data.finishCount);
+	    					$("#order_title").text(title);
+						}else if(type==4){
+							$("#fanxian_money").text(data.fanxianMoney);
+							$("#sumreturn").text(data.sumreturn);
+	    					$("#fanxian_title").text(title);
+						}else if(type==5){
+							$("#tixian_money").text(data.tixianMoney);
+	    					$("#tixian_title").text(title);
+						}
+	   				},
+	    		"json");//这里返回的类型有：json,html,xml,text
+		}
+	</script>
+    
+    
+
+</body>
+
+</html>

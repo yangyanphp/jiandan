@@ -1,0 +1,82 @@
+
+.site {
+    width: 920px;
+  /*   margin: 17px auto; */
+    margin-left: -101px;
+}
+
+.title {
+    float: left;
+    font-size: 14px;
+    color: #333;
+    width: 10%;
+    height: 42px;
+    line-height: 42px;
+    text-align: center;
+}
+
+.tip {
+    float: left;
+    width: 80%;
+    height: auto;
+}
+
+.tip-input {
+    /* position: relative;
+    float: left;
+    margin: 10px 10px;
+    width: 200px;
+    height: 38px; */
+    position: relative;
+    float: left;
+    margin: 10px 10px;
+    width: 200px;
+    height: 38px;
+    padding-left: 10px;
+    border: 1px solid #999;
+}
+.tip-input span:nth-child(2){
+	display: inline-block;
+    line-height: 3;
+}
+.searchable-select{
+	z-index:100;
+}
+.tip-container {
+    /*float: left;*/
+    display:inline-block;
+    margin: 10px 10px;
+    width: 100px;
+    height: 40px;
+    line-height: 40px;
+    font-size: 12px;
+    text-align: center;
+    border: 1px solid #F4F4F4;
+   border-radius: 6px;
+}
+
+.tip-container .jia {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    vertical-align: middle;
+    background: url('jia.svg') no-repeat;
+    background-size: 20px 20px;
+}
+
+.house-tip {
+    display: block;
+    border: 1px solid #F4F4F4;
+    width: 200px;
+    height: 38px;
+}
+
+.del {
+    position: absolute;
+    right: 5px;
+    top: 10px;
+    width: 20px;
+    height: 20px;
+    background: url('del.svg') no-repeat;
+    background-size: 20px 20px;
+}

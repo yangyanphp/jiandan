@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <title>用户管理</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+
+    <link rel="shortcut icon" href="favicon.ico"> 
+    <link href="__PUBLIC__/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="__PUBLIC__/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="__PUBLIC__/css/animate.css" rel="stylesheet">
+    <link href="__PUBLIC__/css/style.css?v=4.1.0" rel="stylesheet">
+ 	<link href="__PUBLIC__/css/plugins/iCheck/custom.css" rel="stylesheet">
+</head>
+
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        
+        <div class="row">
+            
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>编辑用户</h5>
+                        
+                    </div>
+                    <div class="ibox-content">
+                        <form class="form-horizontal m-t" id="signupForm" method="post" action="{:U('admin/member/edit_post')}">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">昵称：</label>
+                                <div class="col-sm-2">
+                                    {$nickname}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">头像：</label>
+                                <div class="col-sm-2">
+                                    <img src="{$avatar}" style="height:100px;width:100px;"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">账户余额：</label>
+                                <div class="col-sm-2">
+                                    <input id="use_money" name="use_money" class="form-control" type="text" aria-required="true" aria-invalid="true" class="error" value="{$use_money}">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">总提现：</label>
+                                <div class="col-sm-2">
+                                    <input id="cash_total" name="cash_total" class="form-control" type="text" aria-required="true" aria-invalid="true" class="error" value="{$cash_total}">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">总返现：</label>
+                                <div class="col-sm-2">
+                                    <input id="total_return" name="total_return" class="form-control" type="text" aria-required="true" aria-invalid="true" class="error" value="{$total_return}">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">代理等级：</label>
+                                <div class="col-sm-2">
+                    				<php>
+                    					$arr=M("ReturnLevel")->select();
+                    				</php>
+                                    <select class="form-control m-b" name="level_id" style="height:35px;">
+                                        <foreach name="arr" item="vo">
+                                        <php>
+                                    		if($level_id==$vo['id']){
+                                    			$checked = "selected='selected'";
+                                    		}else{
+                                    			$checked = "";
+                                    		}
+                                    	</php>
+                                        	<option value="{$vo.id}" {$checked}>{$vo.level_name}</option>
+                                        </foreach>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">提现账户：</label>
+                                <div class="col-sm-2">
+                                    <input id="account" name="account" class="form-control" type="text" aria-required="true" aria-invalid="true" class="error" value="{$account}">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">提现密码：</label>
+                                <div class="col-sm-2">
+                                    <input id="account" name="pwd" class="form-control" type="text" value="">
+                                    <span class="help-block m-b-none"><i class="fa fa-info-circle"></i>如果不重置密码请留空</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">真实姓名：</label>
+                                <div class="col-sm-2">
+                                    <input id="realname" name="realname" class="form-control" type="text" aria-required="true" aria-invalid="true" class="error" value="{$realname}">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">是否为客服：</label>
+                                <div class="col-sm-2">
+		                            <div class="radio i-checks">
+		                                <label>
+		                                    <input type="radio"  <php>if($is_manager==1){</php> checked="" <php>}</php> value="1" name="is_manager"> <i></i>是
+		                                </label>
+		                                <label>
+		                                    <input type="radio" <php>if($is_manager==0){</php> checked="" <php>}</php>  value="0" name="is_manager"> <i></i>否
+		                                </label>
+		                            </div>
+		                            
+                           		 </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-8 col-sm-offset-3">
+                                	<input type="hidden" name="id" value="{$id}">
+                                	<button class="btn btn-primary" type="submit">提交</button>
+                                    <button class="btn btn-danger" type="button" onclick="javascript:window.history.back(-1);">返回</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- 全局js -->
+    <script src="__PUBLIC__/js/jquery.min.js?v=2.1.4"></script>
+    <script src="__PUBLIC__/js/bootstrap.min.js?v=3.3.6"></script>
+
+    <!-- 自定义js -->
+    <script src="__PUBLIC__/js/content.js?v=1.0.0"></script>
+
+    <!-- jQuery Validation plugin javascript-->
+    <script src="__PUBLIC__/js/plugins/validate/jquery.validate.min.js"></script>
+    <script src="__PUBLIC__/js/plugins/validate/messages_zh.min.js"></script>
+
+    <script src="__PUBLIC__/js/demo/form-validate-demo.js"></script>
+	<!-- iCheck -->
+    <script src="__PUBLIC__/js/plugins/iCheck/icheck.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+        });
+    </script>
+    
+    
+
+</body>
+
+</html>
